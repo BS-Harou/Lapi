@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="cs" dir="ltr">
+<head>
+	<meta charset="utf-8" />
+	<base href="{{BASE_URL}}" />
+	<meta name="keywords" content="diskuse, diskuze, diskusní  server, diskuzní server, mobil" />
+	
+	<meta name="viewport" content="width=device-width, min-width=320, initial-scale=1, maximum-scale={{#IS_LOGGED}}5{{/IS_LOGGED}}{{^IS_LOGGED}}1{{/IS_LOGGED}}" />
+	
+	
+	<link rel="shortcut icon" href="http://www.lapiduch.cz/favicon.ico" type="image/x-icon" />
+	<link rel="stylesheet" href="./styles/main.css" type="text/css" />
+	
+	<title>Lapiduch</title>   
+</head>
+<body>
+
+	<header>
+		{{#IS_LOGGED}}<a href="./menu">{{/IS_LOGGED}}
+		<img src="http://www.lapiduch.cz/lapiduch-logo.png" alt="Lapiduch">
+		{{#IS_LOGGED}}</a>{{/IS_LOGGED}}
+	</header>
+
+
+	<section>
+		{{BODY}}
+	</section>
+	
+
+	<footer>
+		&#169; Lapiduch.cz &amp; Len_y{{#IS_LOGGED}} &nbsp;&nbsp;&nbsp;&nbsp; <a href="./odhlasit">Odhlásit se</a>{{/IS_LOGGED}}
+	</footer>
+	
+	
+<script src="./scripts/script.js?v=123.8"></script>
+	
+{{#GET_KLUB}}
+	<script>
+		addValue(form, 'klub', <?php echo "'".$_GET["klub"]."'"; ?>);
+	</script>
+{{/GET_KLUB}}
+	
+<script type="text/javascript">
+	/*
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-26351497-1']);
+	_gaq.push(['_trackPageview']);
+
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+	*/
+</script>
+</body>
+</html>

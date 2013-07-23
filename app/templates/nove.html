@@ -1,0 +1,21 @@
+<h1>Nové</h1>
+{{#filled_list}}
+	<div class="list">
+{{/filled_list}}
+{{#items}}
+	<a href="/klub?{{url}}">
+		{{name}}
+		{{#new_count}}
+			<span class="nove"> +{{new_count}}</span>
+		{{/new_count}}
+	</a>
+{{/items}}
+{{#filled_list}}
+	</div>
+{{/filled_list}}
+
+{{^filled_list}}
+	<p class="msg">Nic nového<br><br><a href="./nove"><img src="./images/ghost.png" width="130"></a></p>
+{{/filled_list}}
+	
+

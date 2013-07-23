@@ -1,0 +1,13 @@
+RewriteEngine on
+RewriteRule  ^(\w+)\/?$  /index.php?str=$1  [QSA,L]
+
+<IfModule mod_expires.c>
+ExpiresActive On
+ExpiresByType image/gif "access plus 1 month"
+ExpiresByType image/jpeg "access plus 1 month"
+ExpiresByType image/png "access plus 1 month"
+ExpiresByType image/ico "access plus 1 month"
+ExpiresByType text/css "access plus 1 day"
+ExpiresByType text/javascript "access plus 1 day"
+ExpiresByType application/x-shockwave-flash "access plus 1 month"
+</IfModule>

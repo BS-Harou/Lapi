@@ -1,0 +1,11 @@
+<h1>Přihlašte se</h1>
+{{#error_msg}}
+	<p class="error-message">{{error_msg}}</p>
+{{/error_msg}}
+<form id="login" action="./login" method="post">
+	<label>Jméno:</label>
+	<input id="user" tabindex="1" type="text" name="user" maxsize="50">
+	<label>Heslo:</label>
+	<input id="password" tabindex="1" type="password" name="pass" maxsize="50">
+	<input type=submit value="Vstoupit!" name="ACTION[login]">
+</form>

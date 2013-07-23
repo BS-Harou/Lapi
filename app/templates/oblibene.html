@@ -1,0 +1,31 @@
+{{#filled_list}}
+	<div class="list">
+{{/filled_list}}
+
+
+{{#items}}
+	{{#is_header}}
+		</div>
+		<h1>{{name}}</h1>
+		<div class="list">
+	{{/is_header}}
+
+	{{^is_header}}
+		<a href="/klub?{{url}}">
+			{{name}}
+			{{#new_count}}
+				<span class="nove"> +{{new_count}}</span>
+			{{/new_count}}
+		</a>
+	{{/is_header}}
+{{/items}}
+
+{{#filled_list}}
+	</div>
+{{/filled_list}}
+
+{{^filled_list}}
+	<p class="msg">Nic oblíbeného<br><br><img src="images/ghost.png" width="130"></p>
+{{/filled_list}}
+	
+

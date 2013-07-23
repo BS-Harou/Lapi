@@ -1,0 +1,426 @@
+<?php
+
+/**
+ * Sessions
+ */
+
+session_start();
+
+/**
+ * Templating library
+ */
+
+require_once('libs/Mustache/Autoloader.php');
+Mustache_Autoloader::register();
+
+/**
+ * Database
+ */
+
+require_once('db_login.php');
+
+class LapiDatabase {
+	private $username;
+	private $password;
+	private $host;
+	private $database;
+	public  $mysqli;
+	public  $isConnected = false;
+
+	public function __construct($u, $p, $h, $d) {
+		$this->username = $u;
+		$this->password = $p;
+		$this->host = $h;
+		$this->database = $d;
+	}
+
+	public function query($q) {
+		if (!$this->isConnected) {
+			$this->realConnect();
+		}
+		return $this->mysqli->query($q);
+	}
+
+	private function realConnect() {
+		$this->mysqli = new Mysqli($this->host, $this->username, $this->password, $this->database);
+		$this->isConnected = $this->mysqli->connect_errno === 0 ? true : false;
+	}
+}
+
+/**
+ * App
+ */
+class LapiApplication {
+	public $database;
+	public $dirSections = 'app/sections';
+	public $dirModels = 'app/models';
+	public $dirTemplates = 'app/templates';
+	public function __construct() {
+		$this->database = new LapiDatabase(DB_USER, DB_PASS, DB_HOST, DB_DB);
+	}
+	public function redirect($section) {
+		header('Location: /' . $section);
+		exit;
+	}
+}
+
+$app = new LapiApplication();
+$GLOBALS["app"] = $app;
+
+
+/**
+ * Lapi Functions
+ */
+function getFile($url) {
+	global $app;
+	$source = callFile($url);    
+	$doc = new DOMDocument();
+
+	if (@$doc->loadHTML($source)) {
+		return $doc;
+	} else {
+		$app->redirect('odhlasit');
+	}
+}
+
+function callFile($url) {
+	if (!isset($_SESSION['lapi_lopuch'])) {
+		return '';
+	}
+
+	$ch = curl_init($url);
+	curl_setopt($ch, CURLOPT_COOKIE, 'lopuch='. $_SESSION['lapi_lopuch'] .'; user='. $_SESSION['lapi_user']); 
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	//curl_setopt ($ch, CURLOPT_FOLLOWLOCATION, true);
+
+	$data = iconv('windows-1250', 'utf-8', curl_exec($ch));
+	$data = str_replace("windows-1250", "utf-8", $data);
+	$data = mb_convert_encoding($data, "HTML-ENTITIES", "UTF-8");
+
+	return $data;
+	exit;
+	return curl_exec($ch);
+}			
+					
+function get_inner_html($node) { 
+	$innerHTML= ''; 
+	$children = $node->childNodes; 
+	foreach ($children as $child) { 
+		$innerHTML .= $child->ownerDocument->saveXML( $child ); 
+	}
+
+	return $innerHTML; 
+}
+
+function removeSpoilers($node) {
+	$elements = $node->getElementsByTagName('font');
+ 	foreach ($elements as $element) { 
+		$element->setAttribute('color', 'black');
+	}
+}
+
+function hideImages($node) {
+ 	$elements = $node->getElementsByTagName('img');
+ 	foreach ($elements as $element) { 
+		$element->setAttribute('data-src', $element->getAttribute('src'));
+		$element->removeAttribute('src');
+	}
+}
+ 
+function getKlubURL($ele) {
+	$url = explode('?', $ele->getAttribute('href'));
+	return $url[1];
+} 
+
+function getNumber($str) {
+	return preg_replace('/[^0-9]/', '', $str);
+}
+
+function getTime($str) {
+	$str = str_replace('.', '/', $str);
+	$str = str_replace('-', '', $str);
+	$str = preg_replace('/^\s/', '', $str);  
+	$str = explode(" ", $str);
+	
+	$str = $str[0] == date('j/n/Y') ? $str[1] : $str[0]; 
+	return $str;   
+}
+
+function stripString($str) {
+	return preg_replace('/[^a-zA-Z0-9\-_]/', '', $str);	
+}
+
+/**
+ * Rendering
+ */
+
+class DefaultParams {
+	protected $_user;
+	private function getSettings($str) {
+		global $app;
+		if (!isset($_user)) {
+			require_once($app->dirModels . '/User.php');
+			$_user = new User();
+		}
+		return isset($_SESSION[$str]) ? $_SESSION[$str] : $_user->settings->{$str};
+	}
+	public function IS_LOGGED() {
+		return isset($_SESSION['lapi_lopuch']);
+	}
+
+	public function BASE_URL() {
+		return 'http://' . $_SERVER['SERVER_NAME'];
+	}
+
+	public function SETTINGS_START_PAGE() {
+		return $this->getSettings('start_page');
+	}
+
+	public function SETTINGS_HIDE_AVATARS() {
+		return $this->getSettings('hide_avatars');
+	}
+
+	public function SETTINGS_RIGHT_CORNER() {
+		return $this->getSettings('right_corner');
+	}
+
+	public function SETTINGS_SHOW_SPOILERS() {
+		return $this->getSettings('show_spoilers');
+	}
+
+	public function SETTINGS_SHOW_POST_MENU() {
+		return $this->getSettings('show_post_menu');
+	}
+
+	public function SETTINGS_NEW_POST_COLOR() {
+		return $this->getSettings('new_post_color');
+	}
+
+	public function SETTINGS_HIDE_OLD_IMAGES() {
+		return $this->getSettings('hide_old_images');
+	}
+}
+	 
+function render($name, $params = NULL) {
+	global $app;
+	if (is_null($params)) $params = new DefaultParams();
+	$m = new Mustache_Engine();
+
+	$name = preg_replace('/[^a-zA-Z0-9\-_]/', '', $name);
+
+	$body = file_get_contents($app->dirTemplates . '/' . $name . '.html');
+	$layout = file_get_contents($app->dirTemplates . '/layout.html');
+
+	$body = str_replace('{{BODY}}', $body, $layout);
+
+	echo $m->render($body, $params);
+}
+
+/**
+ * Default Models & Collections
+ */
+
+class LapiModel {
+	public $attributes = array();
+	public $idAttribute =  'id';
+	public $defaults = array();
+	public $cid = '';
+	public $validationError = '';
+	public $db_table;
+	public function __construct($data) {
+
+		foreach ($data as $key => $value) {
+			$this->set($key, $value);
+		}
+
+		//$this->cid = hash();
+		$this->fillDefaults();
+
+		if (method_exists($this, 'initialize')) {
+			$this->initialize();
+		}
+	}
+	public function fillDefaults() {
+		foreach ($this->defaults as $key => $value) {
+			if (!$this->has($key)) {
+				$this->set($key, $value);
+			}
+		}
+	}
+	public function get($index) {
+		return $this->has($this->attributes[$index]) ? $this->attributes[$index] : NULL;
+	}
+	public function escape($index) {
+		return $this->has($this->attributes[$index]) ? htmlspecialchars($this->attributes[$index]) : NULL;
+	}
+	public function set($index, $value) {
+		return $this->attributes[$index] = $value;
+	}
+	public function remove($index) {
+		unset($this->attributes[$index]);
+	}
+	public function has($index) {
+		return isset($this->attributes[$index]);
+	}
+	public function clear() {
+		$this->attributes = array();
+	}
+	public function getId() {
+		return $this->get($this->idAttribute);
+	}
+	public function setId($value) {
+		return $this->set($this->idAttribute, $value);
+	}
+	public function save() {
+		global $app;
+		if (!isset($this->db_table)) {
+			return false;
+		}
+
+		if (!$this->isValid()) {
+			return $this->validationError;
+		}
+
+		$is_new = $this->isNew();
+		$sqlStringA = '';
+		$sqlStringB = '';
+
+		foreach ($this->attributes as $key => $value) {
+			if ($is_new) {
+				$sqlStringA .= $key . ',';
+				$sqlStringB .= '"' . $value . '",';
+			} else {
+				$sqlStringA .= $key . '="' . value . '",';
+			}
+		}
+	
+		preg_replace('/\.$/', '', $sqlStringA);
+		preg_replace('/\.$/', '', $sqlStringB);
+
+		if ($is_new) {
+			$q = 'INSERT INTO ' . $this->db_table . ' (' . $sqlStringA . ') VALUES(' . $sqlStringB . ')';
+		} else {
+			$q = 'UPDATE ' . $this->db_table . ' SET ' . $sqlStringB;
+		}
+
+		return !!@$app->database->query($q);
+	}
+	public function fetch() {
+		global $app;
+		if (!isset($this->db_table)) {
+			return false;
+		}
+
+		$q = 'SELECT * FROM ' . $this->db_table . ' WHERE ' . $this->idAttribute . '=' . $this->getId() . ' LIMIT 1';
+		$rt = $app->database->query($q);
+
+		if (!$rt || $rt->num_rows == 0) {
+			return false;
+		}
+
+		$data = $rt->fetch_object();
+
+		foreach ($data as $key => $value) {
+			$this->set($key, $value);
+		}
+		
+		return true;
+	}
+	public function destroy() {
+		global $app;
+		if (!isset($this->db_table)) {
+			return false;
+		}
+
+		if ($this->isNew()) {
+			return false;
+		}
+
+		$q = 'DELETE FROM ' . $this->db_table . ' WHERE ' . $this->idAttribute . '="' . $this->getId() . '" LIMIT 1';
+
+		return !!@$app->database->query($q);
+	}
+	public function validate() {
+		return 0;
+	}
+	public function isValid() {
+		$this->validationError = $this->validate();
+		return !$this->validationError;
+	}
+	public function parse($store) {
+		foreach($store as $key => $value) {
+			$this->set($key, $value);
+		}
+	}
+	public function isNew() {
+		global $app;
+		if ($this->getId() && strlen($this->setId()) > 0) {
+			if (!isset($this->db_table)) {
+				return false;
+			}
+
+			$rt = $app->database->query('SELECT 1 FROM ' . $this->db_table . ' WHERE ' . $this->idAttribute . '=' . $this->getId() . ' LIMIT 1');
+			return !$rt || $rt->num_rows === 0;
+		}
+		return true;
+	}
+}
+
+class LapiCollection {
+	public $model = 'LapiModel';
+	public $models = array();
+	public $db_table = '';
+
+	public function add($obj) {
+		// if instance of LapiModel
+		$this->models[] = $obj;
+	}
+
+	public function remove($obj) {
+		for ($i=0; $i<count($this->models); $i++) {
+			if ($this->models[$i] === $obj) {
+				unset($this->models[$i]);
+				// move the array!
+			}
+		}
+	}
+
+	public function reset($arr) {
+		$this->models = array();
+		for ($i=0; $i<count($arr); $i++) {
+			$this->add($arr[$i]);
+		}
+	}
+
+	public function get($id) {
+		for ($i=0; $i<count($this->models); $i++) {
+			if ($this->models[$i]->getId() === $id || $this->models[$i]->cid === $id) {
+				return $this->models[$i];
+			}
+		}
+	}
+
+	public function at($index) {
+		return $this->models[$i];
+	}
+
+	public function length() {
+		return count($this->models);
+	}
+
+	public function fetch() {
+		global $app;
+
+		$rt = $app->database->query('SELECT * FROM ' . $this->db_table);
+
+		if (!$rt || $rt->num_rows === 0) {
+			return false;
+		}
+
+		while ($data = $rt) {
+			$this->models = new $this->model($data);
+		}
+
+		return true;
+	}
+}

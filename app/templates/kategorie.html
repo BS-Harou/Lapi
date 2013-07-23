@@ -1,0 +1,29 @@
+<h1>Hledání</h1>
+<form id="search" action="kluby" method="get">
+	<table>
+		<tr>
+			<td>
+				<input type="search" placeholder="Zadejte hledaný výraz" name="search" value="{{old_search}}">
+			</td>
+			<td width="20">
+				<input type="submit" value="">
+			</td>
+		</tr>
+	</table>
+</form>
+
+<h1>Kategorie</h1>
+
+{{#filled_list}}
+	<div class="list">
+
+		{{#items}}
+			<a href="/kluby?{{url}}">{{name}}</a>
+		{{/items}}
+
+	</div>
+{{/filled_list}}
+
+{{^filled_list}}
+	<p class="msg">Žádné kategorie (wtf?)<br><br><img src="./images/ghost.png" width="130"></p>
+{{/filled_list}}

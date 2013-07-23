@@ -1,0 +1,57 @@
+<h1>Nastavení</h1>
+
+{{#errorMsg}}
+	<p class="error-message">{{errorMsg}}</p>
+{{/errorMsg}}
+
+<h2>Mobilní lapiduch</h2>
+
+<form method="POST" class="settings-form">
+	<input type="hidden" name="settings_type" value="mobile" />
+
+	<label for="start_page">Po přihlášení přejít na: </label>
+	<select id="start_page" name="start_page">
+		<option value="menu" {{#is_selected}}menu{{/is_selected}}>Menu</option>
+		<option value="nove" {{#is_selected}}nove{{/is_selected}}>Nové</option>
+		<option value="oblibene" {{#is_selected}}oblibene{{/is_selected}}>Oblíbené</option>
+	</select>
+
+	<label for="right_corner">Primárně zobrazit: </label>
+	<select id="right_corner" name="right_corner">
+		<option value="false">čas/datum</option>
+		<option value="true" {{#SETTINGS_RIGHT_CORNER}}selected{{/SETTINGS_RIGHT_CORNER}}>id příspěvku</option>
+	</select>
+
+	<label for="new_post_color">Barva pozadí nových příspěvků: </label>
+		<input type="color" id="new_post_color" name="new_post_color" value="{{SETTINGS_NEW_POST_COLOR}}{{^SETTINGS_NEW_POST_COLOR}}#f0f0fe{{/SETTINGS_NEW_POST_COLOR}}" /> 
+
+	<label>
+		<input type="checkbox" value="true" name="show_spoilers" {{#SETTINGS_SHOW_SPOILERS}}checked{{/SETTINGS_SHOW_SPOILERS}} /> Automaticky zobrazovat spoilery
+	</label>
+
+	<label>
+		<input type="checkbox" value="true" name="hide_avatars" {{#SETTINGS_HIDE_AVATARS}}checked{{/SETTINGS_HIDE_AVATARS}}/> Nezobrazovat avatary
+	</label>
+
+	<label>
+		<input type="checkbox" value="true" name="show_post_menu" {{#SETTINGS_SHOW_POST_MENU}}checked{{/SETTINGS_SHOW_POST_MENU}} /> Zobrazit menu ke každému příspěvku
+	</label>
+
+	<label>
+		<input type="checkbox" value="true" name="hide_old_images" {{#SETTINGS_HIDE_OLD_IMAGES}}checked{{/SETTINGS_HIDE_OLD_IMAGES}} /> Skrýt obrázky u starých příspěvků
+	</label>
+
+
+	<input type="submit" value="Změnit">
+
+</form>
+
+<h2>Změna hesla</h2>
+<form method="POST" class="settings-form">
+	<input type="hidden" name="settings_type" value="password" />
+	<label>Původní heslo: <input type="text" /></label>
+	<label>Nové heslo: <input type="text" /></label>
+	<label>Znovu nové heslo: <input type="text" /></label>
+</form>
+
+<!--<h2>Avatar</h2>-->
