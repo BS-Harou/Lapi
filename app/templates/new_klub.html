@@ -14,7 +14,7 @@
 	<a href="klub?{{dvpravo}}" class="sipka-dvpravo"></a>
 	<a href="klub?{{vpravo}}" class="sipka-vpravo"></a>
 	{{#can_add}}
-		<a href="/pridat?klub=<?php echo $klub; ?>" class="sipka-plus"></a>
+		<a href="./pridat?klub={{club}}" class="sipka-plus"></a>
 	{{/can_add}}
 	<a href="klub?klub={{fav_url}}" class="sipka-srdce right {{favourite}}"></a>
 </div>
@@ -27,26 +27,35 @@
 			<div class="post-info">
 				{{^SETTINGS_HIDE_AVATARS}}
 					<a href="/pridat?klub={{club}}&amp;to={{nick}}&amp;id={{id}}" style="float: left">
-						<img alt="Avatar" class="avatar" data-id="{{id_num}}" src="http://www.lapiduch.cz/{{avatar_url}}">
+						<img alt="Avatar" class="avatar" {{#can_delete}}data-candelete="klub"{{/can_delete}} data-id="{{id_num}}" src="http://www.lapiduch.cz/{{avatar_url}}">
 					</a>
 				{{/SETTINGS_HIDE_AVATARS}}
-				<span class="nick">{{nick}}</span>
-				<span class="datetime" onclick="swapTime(this)" {{#SETTINGS_RIGHT_CORNER}}data-time="{{time}}"{{/SETTINGS_RIGHT_CORNER}}>
-					{{#SETTINGS_RIGHT_CORNER}}
-						ID: {{id_num}}
-					{{/SETTINGS_RIGHT_CORNER}}
-					{{^SETTINGS_RIGHT_CORNER}}
-						{{time}}
-					{{/SETTINGS_RIGHT_CORNER}}
-				</span>
 
-				<div class="post-buttons">
-					{{^is_mine}}<a href="/pridat?klub={{club}}&amp;to={{nick}}&amp;id={{id}}">O</a>{{/is_mine}}
-					{{#can_delete}}<a href="/smaz">S</a>{{/can_delete}}
-					<a href="#bookmark" {{#is_bookmarked}}{{/is_bookmarked}}>B</a>
-					<a href="/poslat?to={{nick}}">Z</a>
+				<div class="post-info-middle">
+					<div class="nick">{{nick}}</div>
+					
+
+					<div class="post-buttons">
+						{{^is_mine}}<a href="./pridat?klub={{club}}&amp;to={{nick}}&amp;id={{id}}" class="post-icon-reply"></a>{{/is_mine}}
+
+						{{#is_bookmarked}}
+						<a href="./smaz?post={{bookmark_id}}&amp;club={{club}}&amp;type=uschovna" class="post-icon-bookmarked"></a>
+						{{/is_bookmarked}}
+
+						{{^is_bookmarked}}
+							<a href="./uschovna?club={{club}}&amp;id={{id_num}}&amp;action=add" class="post-icon-bookmark"></a>
+						{{/is_bookmarked}}
+						
+						<a href="./poslat?to={{nick}}" class="post-icon-message"></a>
+						{{#can_delete}}<a href="./smaz?post={{id_num}}&amp;klub={{club}}&amp;type=klub" onclick="deletePost('{{id_num}}', 'klub');return false;" class="post-icon-delete"></a>{{/can_delete}}
+					</div>
+
 				</div>
-				<div style="clear: both"></div>
+
+				<div class="datetime">
+						<div>{{time}}</div>
+						<div class="post-id">{{id_num}}</div>
+				</div>
 				<div style="clear: both"></div>
 			</div>
 			<div class="post-content">
@@ -67,7 +76,7 @@
 	<a href="klub?{{dvpravo}}" class="sipka-dvpravo"></a>
 	<a href="klub?{{vpravo}}" class="sipka-vpravo"></a>
 	{{#can_add}}
-		<a href="/pridat?klub=<?php echo $klub; ?>" class="sipka-plus"></a>
+		<a href="./pridat?klub={{club}}" class="sipka-plus"></a>
 	{{/can_add}}
 	<a href="klub?klub={{fav_url}}" class="sipka-srdce right {{favourite}}"></a>
 </div>

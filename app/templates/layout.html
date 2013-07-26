@@ -33,13 +33,13 @@
 	
 	
 <script src="./scripts/script.js?v=123.8"></script>
-	
-{{#GET_KLUB}}
-	<script>
-		addValue(form, 'klub', <?php echo "'".$_GET["klub"]."'"; ?>);
-	</script>
-{{/GET_KLUB}}
-	
+
+{{#club_name}}
+<script>
+	addValue(form, 'klub', '{{club}}');
+</script>
+{{/club_name}}
+
 <script type="text/javascript">
 	/*
 	var _gaq = _gaq || [];

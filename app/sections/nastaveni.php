@@ -1,6 +1,23 @@
 <?php
 
 include_once('app/models/User.php');
+
+function change_password($oldp, $newp, $againp) {
+	$query = http_build_query(
+		array(
+			'oldpass' => iconv('utf-8', 'windows-1250', $oldp), 
+			'newpass' => iconv('utf-8', 'windows-1250', $newp),
+			'againpass' => iconv('utf-8', 'windows-1250', $againp),
+		)
+	);
+	$ch = curl_init('http://www.lapiduch.cz/passwd.php');
+	curl_setopt($ch, CURLOPT_COOKIE, 'lopuch=' . $_SESSION['lapi_lopuch'].'; user=' . $_SESSION['lapi_user']); 
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($ch, CURLOPT_POST, 1);
+	curl_setopt($ch, CURLOPT_POSTFIELDS, $query);
+	$source = curl_exec($ch);                 
+}
+
 class Params extends DefaultParams {
 	public $errorMsg = false;
 	public function is_selected() {
@@ -22,9 +39,15 @@ if (isset($_POST['settings_type'])) {
 		$user = new User();
 		$user->setSettings($_POST);
 		$params->errorMsg = $user->saveSettings();
+	} else if ($_POST['settings_type'] == 'pass') {
+		if (!isset($_POST['newp']) || !$_POST['newp']) {
+			$params->errorMsg = 'Nové heslo nesmí být prázdné';
+		} else if ($_POST['newp'] != $_POST['againp']) {
+			$params->errorMsg = 'Hesla se nerovnají';
+		} else {
+			change_password($_POST['oldp'], $_POST['newp'], $_POST['againp']);
+		}
 	}
-
-	$app->redirect('nastaveni');
 }
 
 render('nastaveni', $params);

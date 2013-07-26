@@ -164,6 +164,7 @@ nav img {
 	max-width: 100%;
 	table-layout: fixed;
 }
+
 .post td:first-child {
 	width: 50px;
 }
@@ -171,7 +172,7 @@ nav img {
 	vertical-align: top;
 	text-align: left;
 }
-.post td > div, .new-post {
+.post td > div {
 	vertical-align: top;
 	margin: 0px;
 	padding: 10px;
@@ -182,7 +183,7 @@ nav img {
 	white-space: normal;
 	word-wrap: break-word;
 }
-.post div a {
+.post-content a {
 	text-decoration: underline;
 	color: black !important;
 	font-weight: bold !important;
@@ -198,37 +199,141 @@ nav img {
 .post div * {
 	max-width: 100% !important;
 }
+
+
+.new-post {
+	border: 1px solid #ddddbb;
+	margin-top: 10px;
+	width: 100%;
+	max-width: 100%;
+	white-space: normal;
+	word-wrap: break-word;
+}
+
+.post-info {
+	//border-bottom: 1px solid #eeeeff;
+	padding: 5px;
+	padding-bottom: 0px;
+}
+
+.post-info .avatar {
+	width: 35px;
+	height: 45px;
+}
+
+.post-buttons {
+	padding-top: 5px;
+}
+
+.post-buttons a {
+	display: inline-block;
+	width: 14px;
+	height: 14px;
+	margin-right: 4px;
+	background-repeat: no-repeat;
+}
+
+.post-icon-reply {
+	background: url('/images/icons/reply14.png');
+}
+
+.post-icon-bookmark {
+	background: url('/images/icons/star14.png');
+}
+
+.post-icon-bookmarked {
+	background: url('/images/icons/yellowStar14.png');
+}
+
+.post-icon-message {
+	background: url('/images/icons/message14.png');
+}
+
+.post-icon-delete {
+	background: url('/images/icons/trashcan14.png');
+}
+
+.post-icon-original {
+	background: url('/images/icons/original14.png');
+}
+
+.nick .post-for {
+	font-weight: normal;
+	font-size: 14px;
+	color: black;
+}
+
+.post-buttons a.post-icon-unread {
+	background: blue;
+	border-radius: 7px;
+	width: 9px !important;
+	height: 9px !important;
+	margin-left: 3px;
+	box-sizing: content-box;
+	position: relative;
+	top: -3px;
+}
+
+.post-info-middle {
+	float: left;
+}
+
+.new-post .nick {
+	padding-top: 5px;
+}
+.new-post .post-content {
+	padding: 5px;
+}
+
+
+
 .msg {
 	padding: 10px;
-	text-align: center;    
+	text-align: center;
 }
 .nove-post {
 	background: #f0f0fe !important;
 }
-.nove, .datetime {
+.nove {
+	line-height: 21px;
 	color: red !important;
 	font-size: 13px;
-	line-height: 21px;
 	float: right;
 	display: block;
 }
+.new-post .datetime {
+	padding: 5px;
+	text-align: right;
+}
+
 .datetime {
 	color: #666 !important;
 	font-size: 11px !important;
+	float: right;
+	display: block;
 }
-.datetime * {
+.post-id {
+	padding-top: 4px;
+}
+
+
+/*.datetime * {
 	font-weight: normal !important;
-}
+}*/
+
+
 .nadpis {
 	font-weight: bold;
 	color: darkblue;
 }
 img[data-src] {
-	padding: 10px;
-	width: 30px !important;
-	height: 30px !important;
+	box-sizing: content-box;
+	display: inline-block;
+	padding-top: 10px;
+	width: 40px !important;
+	height: 27px !important;
+	white-space: nowrap;
 	text-align: center;
-	line-height: 30px;
 	background: black;
 	color: white;
 	content: "IMG";
@@ -358,15 +463,17 @@ a.sipka-srdce {
  */
 
 h2 {
+	font-weight: bold;
 	border: 1px solid #ccc;
 	border-left: none;
 	border-right: none;
- 	padding: 2px 10px;
+ 	padding: 0 10px;
+ 	height: 22px;
+ 	line-height: 22Px;
  	margin: 0;
+ 	margin-top: 15px;
  	background: #f1f1f1;
  	background: linear-gradient(to bottom, #fff, #efefef);
- 	border-left: 1px solid #ccc;
- 	border-right: 1px solid #ccc;
  	font-size: 13px;
  	width: 100%;
  	color: #222;

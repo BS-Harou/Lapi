@@ -25,15 +25,13 @@
 						<span class="nick">{{nick}}</span>
 						<!-- nechat swapTime i u posty? -->
 						<span class="datetime" onclick="swapTime(this)">{{time}}</span>
-						{{#unread}}
-							Dosud nepřečtené
-						{{/unread}}
 						{{#title}}
 							<br />
 							<span class="nadpis">{{title}}</span>
 						{{/title}}
-						<br />
-						{{{text}}}
+						<div class="post-content">
+							{{{text}}}
+						</div>
 					</div>
 				</td>
 

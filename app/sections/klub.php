@@ -27,11 +27,13 @@ class Item {
 	public $is_new;
 	public $is_mine;
 	public $is_bookmarked;
+	public $bookmark_id;
 }
 
 $query = $_SERVER['QUERY_STRING'];  
 
-$klub = htmlspecialchars($_GET['klub']);
+$klub = stripString($_GET['klub']);
+
 if ($_GET['mod'] === 'book') {
 	callFile('http://www.lapiduch.cz/index.php?'.$query);
 }
@@ -46,7 +48,14 @@ if (is_null($elements) || $elements->length == 0) {
 }
 
 require_once($app->dirModels . '/User.php');
+require_once($app->dirModels . '/Post.php');
+
 $user = new User();
+
+$posts = new Posts();
+$posts->fetch(array(
+	'where' => 'club="' . $klub . '" AND owner="' . $user->nick . '"'
+));
 
 
 $params = new Params();
@@ -107,7 +116,7 @@ foreach ($elements as $post) {
 	 * Is this post mine?
 	 */
 
-	$item->is_mine = $item->nick == $user->nick;
+	$item->is_mine = $item->nick == $_SESSION['lapi_user'];
 
 	/**
 	 * Time
@@ -115,7 +124,7 @@ foreach ($elements as $post) {
 	
 	$cas = $nick->parentNode->nextSibling->nextSibling->nextSibling;
 	while ($cas->nodeType != 3 && $cas->previousSibling) $cas = $cas->previousSibling; // pravděpodobně už neni potřeba
-	$item->time = getTime($cas->nodeValue); 
+	$item->time = getTime($cas->nodeValue);
 
 	/**
 	 * Is the post new?
@@ -123,6 +132,15 @@ foreach ($elements as $post) {
 
 	$is_new = $xpath->query('//table[@id="' . $item->id . '"]//span[@class="PrA2"]');	
 	$item->is_new = $is_new->length > 0 ? 'nove-post' : '';	
+
+	/**
+	 * Is the POST bookmarked by user?
+	 */
+	$bookmark = $posts->firstWhere(array('post_id' => $item->id));
+	$item->is_bookmarked =  $bookmark != NULL;
+	if ($item->is_bookmarked) {
+		$item->bookmark_id = $bookmark->get('id');
+	}
 
 	/**
 	 * Title and text content
@@ -141,7 +159,13 @@ foreach ($elements as $post) {
 	if ($is_new->length == 0 && $user->settings->hide_old_images) {
 		hideImages($text);
 	}
+
 	$item->text = get_inner_html($text);
+	$item->text = fix_replies($item->text);
+
+	if ($user->settings->linkify) {
+		$item->text = linkify($item->text);
+	}
 
 	/**
 	 * Can the user delete the post?
@@ -161,5 +185,8 @@ foreach ($elements as $post) {
 }
 
 
-
-render('new_klub', $params);
+if ($params->SETTINGS_OLD_STYLE()) {
+	render('klub', $params);
+} else {
+	render('new_klub', $params);	
+}

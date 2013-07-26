@@ -1,0 +1,10 @@
+<h1>Smazat</h1>
+
+<form method="POST">
+	<p>Jste si jisti, že chcete smazat příspěvěk s id {{post}}?</p>
+	<input type="hidden" name="post" value="{{post}}" />
+	<input type="hidden" name="type" value="{{type}}" />
+	<input type="hidden" name="klub" value="{{klub}}" />
+	<input type="submit" value="Ano" />
+	<input type="button" value="Ne" onclick="history.back()" />
+</form>

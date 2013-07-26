@@ -41,6 +41,10 @@ class LapiDatabase {
 		return $this->mysqli->query($q);
 	}
 
+	public function dump() {
+		var_dump($this->mysqli);
+	}
+
 	private function realConnect() {
 		$this->mysqli = new Mysqli($this->host, $this->username, $this->password, $this->database);
 		$this->isConnected = $this->mysqli->connect_errno === 0 ? true : false;
@@ -112,16 +116,20 @@ function get_inner_html($node) {
 	return $innerHTML; 
 }
 
+function fix_replies($html) {
+	return preg_replace('/href=\"klub\.php\?/', 'href="klub?', $html);
+}
+
 function removeSpoilers($node) {
 	$elements = $node->getElementsByTagName('font');
- 	foreach ($elements as $element) { 
+	foreach ($elements as $element) { 
 		$element->setAttribute('color', 'black');
 	}
 }
 
 function hideImages($node) {
- 	$elements = $node->getElementsByTagName('img');
- 	foreach ($elements as $element) { 
+	$elements = $node->getElementsByTagName('img');
+	foreach ($elements as $element) { 
 		$element->setAttribute('data-src', $element->getAttribute('src'));
 		$element->removeAttribute('src');
 	}
@@ -136,18 +144,57 @@ function getNumber($str) {
 	return preg_replace('/[^0-9]/', '', $str);
 }
 
+function isValidCSSColor($color) {
+	if (!isset($color) || !$color) 	return false;
+	if ($color == 'transparent') return true;
+	if (preg_match('/^#[0-9a-zA-Z]{6}$/', $color)) return true;
+	if (preg_match('/^#[0-9a-zA-Z]{3}$/', $color)) return true;
+	if (preg_match('/^(rgb|hsl)a?\([0-9\s,]+\)$/', $color)) return true;
+	if (preg_match('/^(linear|radial)-gradient\([a-z%0-9\s,]+\)$/', $color)) return true;
+	return false;
+}
+
 function getTime($str) {
 	$str = str_replace('.', '/', $str);
 	$str = str_replace('-', '', $str);
 	$str = preg_replace('/^\s/', '', $str);  
 	$str = explode(" ", $str);
 	
-	$str = $str[0] == date('j/n/Y') ? $str[1] : $str[0]; 
-	return $str;   
+	$str = $str[0] == date('j/n/Y') ? stripString($str[1]) : $str[0]; 
+	return trim($str);
+}
+
+function linkify($value, $protocols = array('http', 'mail'), array $attributes = array(), $mode = 'normal') {
+	// Link attributes
+	$attr = '';
+	foreach ($attributes as $key => $val) {
+		$attr = ' ' . $key . '="' . htmlentities($val) . '"';
+	}
+
+	$links = array();
+
+	// Extract existing links and tags
+	$value = preg_replace_callback('~(<a .*?>.*?</a>|<.*?>)~i', function ($match) use (&$links) { 
+		return '<' . array_push($links, $match[1]) . '>'; 
+	}, $value);
+
+	// Extract text links for each protocol
+	foreach ((array)$protocols as $protocol) {
+		switch ($protocol) {
+			case 'http':
+			case 'https': $value = preg_replace_callback($mode != 'all' ? '~(?:(https?)://([^\s<]+)|(www\.[^\s<]+?\.[^\s<]+))(?<![\.,:])~i' : '~([^\s<]+\.[^\s<]+)(?<![\.,:])~i', function ($match) use ($protocol, &$links, $attr) { if ($match[1]) $protocol = $match[1]; $link = $match[2] ?: $match[3]; return '<' . array_push($links, '<a' . $attr . ' href="' . $protocol . '://' . $link . '">' . $link . '</a>') . '>'; }, $value); break;
+			case 'mail': $value = preg_replace_callback('~([^\s<]+?@[^\s<]+?\.[^\s<]+)(?<![\.,:])~', function ($match) use (&$links, $attr) { return '<' . array_push($links, '<a' . $attr . ' href="mailto:' . $match[1] . '">' . $match[1] . '</a>') . '>'; }, $value); break;
+			case 'twitter': $value = preg_replace_callback('~(?<!\w)[@#](\w++)~', function ($match) use (&$links, $attr) { return '<' . array_push($links, '<a' . $attr . ' href="https://twitter.com/' . ($match[0][0] == '@' ? '' : 'search/%23') . $match[1] . '">' . $match[0] . '</a>') . '>'; }, $value); break;
+			default: $value = preg_replace_callback($mode != 'all' ? '~' . preg_quote($protocol, '~') . '://([^\s<]+?)(?<![\.,:])~i' : '~([^\s<]+)(?<![\.,:])~i', function ($match) use ($protocol, &$links, $attr) { return '<' . array_push($links, '<a' . $attr . ' href="' . $protocol . '://' . $match[1] . '">' . $match[1] . '</a>') . '>'; }, $value); break;
+		}
+	}
+
+	// Insert all link
+	return preg_replace_callback('/<(\d+)>/', function ($match) use (&$links) { return $links[$match[1] - 1]; }, $value);
 }
 
 function stripString($str) {
-	return preg_replace('/[^a-zA-Z0-9\-_]/', '', $str);	
+	return preg_replace('/[^a-zA-Z0-9\-_:]/', '', $str);	
 }
 
 /**
@@ -188,8 +235,8 @@ class DefaultParams {
 		return $this->getSettings('show_spoilers');
 	}
 
-	public function SETTINGS_SHOW_POST_MENU() {
-		return $this->getSettings('show_post_menu');
+	public function SETTINGS_OLD_STYLE() {
+		return $this->getSettings('old_style');
 	}
 
 	public function SETTINGS_NEW_POST_COLOR() {
@@ -198,6 +245,10 @@ class DefaultParams {
 
 	public function SETTINGS_HIDE_OLD_IMAGES() {
 		return $this->getSettings('hide_old_images');
+	}
+
+	public function SETTINGS_LINKIFY() {
+		return $this->getSettings('linkify');
 	}
 }
 	 
@@ -248,10 +299,10 @@ class LapiModel {
 		}
 	}
 	public function get($index) {
-		return $this->has($this->attributes[$index]) ? $this->attributes[$index] : NULL;
+		return $this->has($index) ? $this->attributes[$index] : NULL;
 	}
 	public function escape($index) {
-		return $this->has($this->attributes[$index]) ? htmlspecialchars($this->attributes[$index]) : NULL;
+		return $this->has($index) ? htmlspecialchars($this->attributes[$index]) : NULL;
 	}
 	public function set($index, $value) {
 		return $this->attributes[$index] = $value;
@@ -293,9 +344,9 @@ class LapiModel {
 				$sqlStringA .= $key . '="' . value . '",';
 			}
 		}
-	
-		preg_replace('/\.$/', '', $sqlStringA);
-		preg_replace('/\.$/', '', $sqlStringB);
+
+		$sqlStringA = preg_replace('/,$/', '', $sqlStringA);
+		$sqlStringB = preg_replace('/,$/', '', $sqlStringB);
 
 		if ($is_new) {
 			$q = 'INSERT INTO ' . $this->db_table . ' (' . $sqlStringA . ') VALUES(' . $sqlStringB . ')';
@@ -312,6 +363,7 @@ class LapiModel {
 		}
 
 		$q = 'SELECT * FROM ' . $this->db_table . ' WHERE ' . $this->idAttribute . '=' . $this->getId() . ' LIMIT 1';
+
 		$rt = $app->database->query($q);
 
 		if (!$rt || $rt->num_rows == 0) {
@@ -326,17 +378,21 @@ class LapiModel {
 		
 		return true;
 	}
-	public function destroy() {
+	public function destroy($attr) {
 		global $app;
 		if (!isset($this->db_table)) {
 			return false;
 		}
 
-		if ($this->isNew()) {
+		if (!$this->getId()) {
 			return false;
 		}
 
-		$q = 'DELETE FROM ' . $this->db_table . ' WHERE ' . $this->idAttribute . '="' . $this->getId() . '" LIMIT 1';
+		$q = 'DELETE FROM ' . $this->db_table . ' WHERE ' . $this->idAttribute . '="' . $this->getId() . '"';
+
+		if (isset($attr['where'])) 	$q .= ' AND ' . $attr['where'];
+
+		$q .= ' LIMIT 1';
 
 		return !!@$app->database->query($q);
 	}
@@ -354,7 +410,7 @@ class LapiModel {
 	}
 	public function isNew() {
 		global $app;
-		if ($this->getId() && strlen($this->setId()) > 0) {
+		if ($this->getId() && strlen($this->getId()) > 0) {
 			if (!isset($this->db_table)) {
 				return false;
 			}
@@ -369,7 +425,7 @@ class LapiModel {
 class LapiCollection {
 	public $model = 'LapiModel';
 	public $models = array();
-	public $db_table = '';
+	public $db_table;
 
 	public function add($obj) {
 		// if instance of LapiModel
@@ -401,26 +457,68 @@ class LapiCollection {
 	}
 
 	public function at($index) {
-		return $this->models[$i];
+		return $this->models[$index];
 	}
 
 	public function length() {
 		return count($this->models);
 	}
 
-	public function fetch() {
+	public function fetch($attr) {
 		global $app;
 
-		$rt = $app->database->query('SELECT * FROM ' . $this->db_table);
+		if (!isset($this->db_table)) {
+			return false;
+		}
+
+		$q = 'SELECT SQL_CALC_FOUND_ROWS * FROM ' . $this->db_table;
+
+		if (isset($attr['where'])) 	$q .= ' WHERE ' . $attr['where'];
+		if (isset($attr['order'])) 	$q .= ' ORDER BY ' . $attr['order'];
+		if (isset($attr['limit'])) 	$q .= ' LIMIT ' . $attr['limit'];
+
+		$rt = $app->database->query($q);
 
 		if (!$rt || $rt->num_rows === 0) {
 			return false;
 		}
 
-		while ($data = $rt) {
-			$this->models = new $this->model($data);
+		$this->models = array();
+
+		while ($data = $rt->fetch_object()) {
+			$this->models[] = new $this->model($data);
 		}
 
 		return true;
+	}
+
+	public function allRowsCount() {
+		global $app;
+
+		if (!isset($this->db_table)) {
+			return false;
+		}
+
+		$rt = $app->database->query('SELECT FOUND_ROWS() AS amount');
+
+		if (!$rt) {
+			return false;
+		}
+
+		$data = $rt->fetch_object();
+
+		return $data->amount;
+	}
+
+	public function firstWhere($attrs) {
+		for ($i=0; $i < $this->length(); $i++) {
+			foreach ($attrs as $key => $value) {
+				if ($this->at($i)->get($key) != $attrs[$key]) {
+					continue 2;
+				}
+			}
+			return $this->at($i);
+		}
+		return NULL;
 	}
 }

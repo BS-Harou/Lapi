@@ -1,11 +1,12 @@
 <div class="add-form">
+	{{#error_msg}}<p class="error-message">{{error_msg}}</p>{{/error_msg}}
 	<form method="post">
 		<label for="tituelek">Adresát:</label>
 		<input type="text" id="kdo" name="kdo" value="{{send_to}}">
 		<label for="titulek">Titulek:</label>
-		<input type="text" id="titulek" name="titulek">
+		<input type="text" id="titulek" name="titulek" value="{{title}}">
 		<label for="body">Zpráva:</label>
-		<textarea id="body" name="body"></textarea>
+		<textarea id="body" name="body">{{text}}</textarea>
 		<input type="submit" value="Odeslat">
 	</form>
 </div>

@@ -1,5 +1,5 @@
 <?php
-$klub = $_GET['klub'];
+$klub = stripString($_GET['klub']);
 
 /**
  * Define functions
@@ -15,22 +15,38 @@ function send_post($club, $titulek, $body) {
 		)
 	);
 	$ch = curl_init ('http://www.lapiduch.cz/klub.php?klub=' . $club);
-	curl_setopt ($ch, CURLOPT_COOKIE, 'lopuch='.$_SESSION['lapi_lopuch'].'; user='.$_SESSION['lapi_user']); 
-	curl_setopt ($ch, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($ch, CURLOPT_COOKIE, 'lopuch=' . $_SESSION['lapi_lopuch'].'; user=' . $_SESSION['lapi_user']); 
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	curl_setopt($ch, CURLOPT_POST, 1);
 	curl_setopt($ch, CURLOPT_POSTFIELDS, $query);
-	$source = curl_exec ($ch);                 
-	$doc = new DOMDocument();
+	$source = curl_exec($ch);                 
 }
+
+
+/**
+ * Params
+ */
+
+class Params extends DefaultParams {
+	public $reply;
+	public $error_msg;
+	public $title;
+}
+
+$params = new Params();
+
 
 /**
  * Data for new post
  */
-$titulek = $_POST['titulek'] ? $_POST['titulek'] : '';
+$titulek = $_POST['titulek'] ? htmlspecialchars($_POST['titulek']) : '';
 $body = $_POST['body'];
 if ($body && $klub) {      
 	send_post($klub, $titulek, $body);
 	$app->redirect('klub?klub=' . $klub);
+} else if ($titulek) {
+	$params->error_msg = 'Musíte vyplnit text zprávy';
+	$params->title = $titulek;
 }
 
 /**
@@ -40,18 +56,14 @@ $to = htmlspecialchars($_GET['to']);
 $id = getNumber(htmlspecialchars($_GET['id']));
 $ta = '';
 if ($to && $id) {
-	$ta = '<a href="http://www.lapiduch.cz/klub.php?klub='.$klub.'&to='.$id.'" class="reply">'.$to.' ['.$id.']</a>: ';
+	$ta = '<a href="klub.php?klub='.$klub.'&to='.$id.'" class="reply">'.$to.' ['.$id.']</a>: ';
 }
 
 /**
  * Rendering
  */
 
-class Params extends Default Params {
-	public $reply;
-}
 
-$params = new Params();
 $params->reply = $ta;
 
 render('pridat', $params);

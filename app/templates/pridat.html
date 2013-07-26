@@ -1,7 +1,8 @@
 <div class="add-form">
+	{{#error_msg}}<p class="error-message">{{error_msg}}<p>{{/error_msg}}
 	<form method="post">
 		<label for="tituelek">Titulek:</label>
-		<input type="text" name="titulek">
+		<input type="text" name="titulek" value="{{title}}">
 		<label for="titulek">Zpráva:</label>
 		<textarea name="body">{{{reply}}}</textarea>
 		<input type="submit" value="Odeslat">

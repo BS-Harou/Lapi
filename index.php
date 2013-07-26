@@ -23,7 +23,8 @@ if (isset($_SESSION['lapi_lopuch']) && strlen($_SESSION['lapi_lopuch']) > 0) {
 			render('e404');
 		}
 	} else {
-		include($app->dirSections . '/menu.php');
+		$params = new DefaultParams();
+		$app->redirect($params->SETTINGS_START_PAGE());
 	}
 } else {
 	include($app->dirSections . '/login.php');

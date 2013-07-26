@@ -21,6 +21,7 @@ class Item {
 	public $title;
 	public $info;
 	public $unread = false;
+	public $is_mine;
 }
 
 $query = $_SERVER['QUERY_STRING'];
@@ -75,6 +76,12 @@ foreach ($elements as $post) {
 	$item->nick = $nick->nodeValue;
 
 	/**
+	 * Is this post mine?
+	 */
+
+	$item->is_mine = $item->nick == $_SESSION['lapi_user'];
+
+	/**
 	 * has the recep. read the message?
 	 */
 
@@ -103,6 +110,9 @@ foreach ($elements as $post) {
 
 	$text->removeChild($text->firstChild); 
 	$item->text = get_inner_html($text);
+	if ($user->settings->linkify) {
+		$item->text = linkify($item->text);
+	}
 
 	/**
 	 * Add to list
@@ -111,4 +121,8 @@ foreach ($elements as $post) {
 	$params->items[] = $item;
 }
 
-render('posta', $params);
+if ($params->SETTINGS_OLD_STYLE()) {
+	render('posta', $params);
+} else {
+	render('new_posta', $params);	
+}

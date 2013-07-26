@@ -14,7 +14,7 @@
 	<a href="klub?{{dvpravo}}" class="sipka-dvpravo"></a>
 	<a href="klub?{{vpravo}}" class="sipka-vpravo"></a>
 	{{#can_add}}
-		<a href="/pridat?klub=<?php echo $klub; ?>" class="sipka-plus"></a>
+		<a href="./pridat?klub={{club}}" class="sipka-plus"></a>
 	{{/can_add}}
 	<a href="klub?klub={{fav_url}}" class="sipka-srdce right {{favourite}}"></a>
 </div>
@@ -29,7 +29,7 @@
 				{{^SETTINGS_HIDE_AVATARS}}
 					<td>
 						<a href="/pridat?klub={{club}}&amp;to={{nick}}&amp;id={{id}}">
-							<img alt="Avatar" class="avatar" {{#can_delete}}data-candelete="yes"{{/can_delete}} data-id="{{id_num}}" src="http://www.lapiduch.cz/{{avatar_url}}">
+							<img alt="Avatar" class="avatar" {{#can_delete}}data-candelete="klub"{{/can_delete}} data-id="{{id_num}}" src="http://www.lapiduch.cz/{{avatar_url}}">
 						</a>
 					</td>
 				{{/SETTINGS_HIDE_AVATARS}}
@@ -48,18 +48,10 @@
 							<br />
 							<span class="nadpis">{{title}}</span>
 						{{/title}}
-						<br />
-						{{{text}}}
+						<div class="post-content">
+							{{{text}}}
+						</div>
 
-						{{#SETTINGS_SHOW_POST_MENU}}
-							<div class="post-menu">
-								<!-- Reply -->
-								{{#can_delete}}
-									<!-- Delete -->
-								{{/can_delete}}
-								<!-- Favourite -->
-							</div>
-						{{/SETTINGS_SHOW_POST_MENU}}
 					</div>
 				</td>
 			</tr>
@@ -75,7 +67,8 @@
 	<a href="klub?{{dvpravo}}" class="sipka-dvpravo"></a>
 	<a href="klub?{{vpravo}}" class="sipka-vpravo"></a>
 	{{#can_add}}
-		<a href="/pridat?klub=<?php echo $klub; ?>" class="sipka-plus"></a>
+		<a href="./pridat?klub={{club}}" class="sipka-plus"></a>
 	{{/can_add}}
 	<a href="klub?klub={{fav_url}}" class="sipka-srdce right {{favourite}}"></a>
 </div>
+

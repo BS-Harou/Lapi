@@ -33,8 +33,8 @@ d.addEventListener('DOMContentLoaded', function() {
 }, false);
 
 function handleImgClick(e) {
-	this.src = this.dataset.src;
-	delete this.dataset.src;
+	this.src = this.getAttribute('data-src');
+	this.removeAttribute('data-src');
 	this.removeEventListener('click', handleImgClick);
 	e.preventDefault();
 	e.stopPropagation();
@@ -79,22 +79,29 @@ function handleTouchStart(e) {
 function handleTouchEnd(e) {
 	var t = e.changedTouches.item(0);
 	if (xPos && t.pageX-xPos > 200 && Math.abs(t.pageY - yPos) < 80) {
-	
 		if (co = post.getAttribute('data-candelete')) {
-			if (confirm('Chcete určitě smazat tento příspěvek?')) {
-				if (co == 'posta') {
-					
-				}
-				addValue(form, 'type', co == 'posta' ? 'posta' : 'klub');	
-				addValue(form, 'post', post.getAttribute("data-id"));
-				form.submit();
-			}
+			deletePost(post.getAttribute('data-id'), co);
 		} else {
 			alert('Nemáte práva na to smazat tento příspěvek.');
 		}
 	} 
 	
 	xPos = yPos = post = false;
+}
+
+function getRemType(co) {
+	if (co == 'posta' || co == 'uschovna') {
+		return co;
+	}
+	return 'klub';
+}
+
+function deletePost(p, co) {
+	if (confirm('Chcete určitě smazat tento příspěvek?')) {
+		addValue(form, 'type', getRemType(co));
+		addValue(form, 'post', p);
+		form.submit();
+	}
 }
 
 function addValue(form, name, value) {

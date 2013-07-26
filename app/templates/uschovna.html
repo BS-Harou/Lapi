@@ -1,0 +1,60 @@
+<h1>Úschovna</h1>
+
+
+
+{{#has_items}}
+
+<div class="posts-menu">
+	<a href="uschovna?{{vlevo}}" class="sipka-vlevo"></a>
+	<a href="uschovna?{{dvlevo}}" class="sipka-dvlevo"></a>
+	<a href="uschovna?{{dvpravo}}" class="sipka-dvpravo"></a>
+	<a href="uschovna?{{vpravo}}" class="sipka-vpravo"></a>
+</div>
+
+<div id="posts">
+	{{#items}}
+		<div class="post new-post">
+			<div class="post-info">
+				{{^SETTINGS_HIDE_AVATARS}}					
+					<img alt="Avatar" class="avatar" data-candelete="uschovna" data-id="{{id}}" src="http://www.lapiduch.cz/{{avatar_url}}" style="float: left">
+				{{/SETTINGS_HIDE_AVATARS}}
+
+				<div class="post-info-middle">
+					<div class="nick">{{nick}}</div>
+					
+
+					<div class="post-buttons">
+						<a href="./smaz?post={{id}}&amp;type=uschovna" onclick="deletePost('{{id}}', 'uschovna');return false;" class="post-icon-delete"></a>
+						<a href="./klub?klub={{club}}&amp;to={{post_id_num}}" class="post-icon-original"></a>
+					</div>
+
+				</div>
+
+				<div class="datetime">{{time}}</div>
+				<div style="clear: both"></div>
+			</div>
+			<div class="post-content">
+				{{#title}}
+					<span class="nadpis">{{title}}</span>
+					<br />
+				{{/title}}
+				{{{text}}}
+			</div>
+		</div>
+	{{/items}}
+</div>
+
+<div class="posts-menu">
+	<a href="uschovna?{{vlevo}}" class="sipka-vlevo"></a>
+	<a href="uschovna?{{dvlevo}}" class="sipka-dvlevo"></a>
+	<a href="uschovna?{{dvpravo}}" class="sipka-dvpravo"></a>
+	<a href="uschovna?{{vpravo}}" class="sipka-vpravo"></a>
+</div>
+
+
+{{/has_items}}
+
+
+{{^has_items}}
+	<p class="msg">Úschovna je prázdná<br><br><img src="./images/ghost.png" width="130"></p>
+{{/has_items}}

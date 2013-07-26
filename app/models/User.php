@@ -6,9 +6,10 @@ class Settings {
 	public $right_corner = false; // false = id, true = time
 	public $show_spoilers = false;
 	public $hide_avatars = false;
-	public $show_post_menu = false;
+	public $old_style = false;
 	public $hide_old_images = false;
 	public $new_post_color = false; //'#f0f0fe'; (when false, the default CSS is used)
+	public $linkify = false;
 	public function isInvalid() {
 		if ($this->start_page && !in_array($this->start_page, array('menu', 'nove', 'oblibene'))) {
 			return "Stránka po přihlášení je neplatná";
@@ -17,11 +18,12 @@ class Settings {
 		$this->right_corner = !!$this->right_corner;
 		$this->show_spoilers = !!$this->show_spoilers;
 		$this->hide_avatars = !!$this->hide_avatars;
-		$this->show_post_menu = !!$this->show_post_menu;
+		$this->old_style = !!$this->old_style;
 		$this->hide_old_images = !!$this->hide_old_images;
+		$this->linkify = !!$this->linkify;
 
-		if ($this->new_post_color && !preg_match("/#[0-9a-zA-Z]{6}/", $this->new_post_color)) {
-			return "Formát barvy je chybný";
+		if ($this->new_post_color && !isValidCSSColor($this->new_post_color)) {
+			return 'Formát barvy je chybný';
 		}
 
 		return false;

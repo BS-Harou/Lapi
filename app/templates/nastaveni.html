@@ -34,11 +34,15 @@
 	</label>
 
 	<label>
-		<input type="checkbox" value="true" name="show_post_menu" {{#SETTINGS_SHOW_POST_MENU}}checked{{/SETTINGS_SHOW_POST_MENU}} /> Zobrazit menu ke každému příspěvku
+		<input type="checkbox" value="true" name="old_style" {{#SETTINGS_OLD_STYLE}}checked{{/SETTINGS_OLD_STYLE}} /> Původní vzhled klubů
 	</label>
 
 	<label>
 		<input type="checkbox" value="true" name="hide_old_images" {{#SETTINGS_HIDE_OLD_IMAGES}}checked{{/SETTINGS_HIDE_OLD_IMAGES}} /> Skrýt obrázky u starých příspěvků
+	</label>
+
+	<label>
+		<input type="checkbox" value="true" name="linkify" {{#SETTINGS_LINKIFY}}checked{{/SETTINGS_LINKIFY}} /> Převádět text na odkazy
 	</label>
 
 
@@ -48,10 +52,11 @@
 
 <h2>Změna hesla</h2>
 <form method="POST" class="settings-form">
-	<input type="hidden" name="settings_type" value="password" />
-	<label>Původní heslo: <input type="text" /></label>
-	<label>Nové heslo: <input type="text" /></label>
-	<label>Znovu nové heslo: <input type="text" /></label>
+	<input type="hidden" name="settings_type" value="pass" />
+	<label>Původní heslo: <input name="oldp" type="password" maxlength="32" /></label>
+	<label>Nové heslo: <input name="newp" type="password" maxlength="32" /></label>
+	<label>Znovu nové heslo: <input name="againp" type="password" maxlength="32" /></label>
+	<input type="submit" value="Změnit">
 </form>
 
 <!--<h2>Avatar</h2>-->
