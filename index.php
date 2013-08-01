@@ -2,7 +2,29 @@
 error_reporting(E_ALL - E_NOTICE); ini_set('display_errors', 'On'); 
 //header('Content-Type: text/html; charset=utf-8');
 
-include('lib.php');
+/**
+ * Sessions
+ */
+
+session_start();
+
+/**
+ * Templating library
+ */
+
+require_once('libs/Mustache/Autoloader.php');
+Mustache_Autoloader::register();
+
+/**
+ * Database login
+ */
+require_once('db_login.php');
+
+/**
+ * Main Lapi Library
+ */
+
+require_once('libs/Lapi/init.php');
 
 /**
  * "Router"
