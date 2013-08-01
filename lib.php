@@ -46,7 +46,7 @@ class LapiDatabase {
 	}
 
 	public function escape($str) {
-		return $this->mysqli->real_escape_string($str);
+		return mysql_escape_string($str);
 	}
 
 	private function realConnect() {
@@ -66,7 +66,6 @@ class LapiApplication {
 	public $user;
 	public function __construct() {
 		$this->database = new LapiDatabase(DB_USER, DB_PASS, DB_HOST, DB_DB);
-		$this->user = new LapiUser();
 	}
 	public function redirect($section) {
 		header('Location: /' . $section);
@@ -76,6 +75,8 @@ class LapiApplication {
 
 $app = new LapiApplication();
 $GLOBALS['app'] = $app;
+
+$app->user = new LapiUser();
 
 
 /**
@@ -94,6 +95,7 @@ function getFile($url) {
 }
 
 function callFile($url) {
+	global $app;
 	if (!isset($_SESSION['lapi_lopuch'])) {
 		return '';
 	}
@@ -276,6 +278,7 @@ class LapiUser {
 	public $nick = NULL;
 	public $settings;
 	public function __construct($nick=NULL) {
+		global $app;
 		require_once($app->dirModels . '/Settings.php');
 		$this->settings = new Settings();
 		if ($nick != NULL) {
@@ -307,7 +310,9 @@ class LapiUser {
 		foreach($this->settings->attributes as $key => $value) {
 			$arr[$key] = $arr[$key] === 'true' ? true : $arr[$key];
 			$arr[$key] = $arr[$key] === 'false' ? false : $arr[$key];
-			$this->settings->set($key, $arr[$key]);
+			if (array_key_exists($key, $arr) && $key != $this->settings->idAttribute) {
+				$this->settings->set($key, $arr[$key]);
+			}
 		}
 	}
 
@@ -341,10 +346,11 @@ class LapiModel {
 	public $cid = '';
 	public $validationError = '';
 	public $db_table;
-	public function __construct($data) {
-
-		foreach ($data as $key => $value) {
-			$this->set($key, $value);
+	public function __construct($data=NULL) {
+		if ($data != NULL) {
+			foreach ($data as $key => $value) {
+				$this->set($key, $value);
+			}
 		}
 
 		//$this->cid = hash();
@@ -415,13 +421,13 @@ class LapiModel {
 		if ($is_new) {
 			$q = 'INSERT INTO ' . $this->db_table . ' (' . $sqlStringA . ') VALUES(' . $sqlStringB . ')';
 		} else {
-			$q = 'UPDATE ' . $this->db_table . ' SET ' . $sqlStringB;
+			$q = 'UPDATE ' . $this->db_table . ' SET ' . $sqlStringA . ' WHERE ' . $this->idAttribute . '="' . $app->database->escape($this->getId()) . '" LIMIT 1';
 		}
 
 		$rt = !!@$app->database->query($q);
 
 		if (!$rt) {
-			throw 'LapiModel Error. Can\'t save model to MySQL');
+			throw new Exception('LapiModel Error. Can\'t save model to MySQL');
 		}
 
 		return true;
@@ -432,7 +438,7 @@ class LapiModel {
 			return false;
 		}
 
-		$q = 'SELECT * FROM ' . $this->db_table . ' WHERE ' . $this->idAttribute . '=' . $app->database->escape($this->getId()) . ' LIMIT 1';
+		$q = 'SELECT * FROM ' . $this->db_table . ' WHERE ' . $this->idAttribute . '="' . $app->database->escape($this->getId()) . '" LIMIT 1';
 
 		$rt = $app->database->query($q);
 
@@ -461,7 +467,7 @@ class LapiModel {
 		$rt = !!@$app->database->query($q);
 
 		if (!$rt) {
-			throw 'LapiModel Error. Can\'t remove model from MySQL');
+			throw new Exception('LapiModel Error. Can\'t remove model from MySQL');
 		}
 
 		return true;
@@ -485,9 +491,11 @@ class LapiModel {
 				return false;
 			}
 
-			$rt = $app->database->query('SELECT 1 FROM ' . $this->db_table . ' WHERE ' . $this->idAttribute . '=' . $app->database->escape($this->getId()) . ' LIMIT 1');
-			return !$rt || $rt->num_rows === 0;
-		}
+			$q = 'SELECT 1 FROM ' . $this->db_table . ' WHERE ' . $this->idAttribute . '="' . ($app->database->escape($this->getId())) . '" LIMIT 1';
+
+			$rt = $app->database->query($q);
+			return (!$rt || $rt->num_rows === 0);
+		} 
 		return true;
 	}
 }

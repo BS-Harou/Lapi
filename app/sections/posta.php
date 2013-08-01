@@ -121,7 +121,7 @@ foreach ($elements as $post) {
 	$params->items[] = $item;
 }
 
-if ($app->user->settings('old_style')) {
+if ($app->user->settings->get('old_style')) {
 	render('posta', $params);
 } else {
 	render('new_posta', $params);	

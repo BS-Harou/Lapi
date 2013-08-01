@@ -1,14 +1,14 @@
 <?php
 
 
-class Settings extends LapiModule {
+class Settings extends LapiModel {
 	public $db_table = 'user_settings';
 	public $idAttribute = 'nick';
 
 	public $defaults = array(
 		'nick' => NULL,
 		'start_page' => 'menu',
-		'right_corener' = > false, // false = id, true = time
+		'right_corner' => false, // false = id, true = time
 		'show_spoilers' => false,
 		'hide_avatars' => false,
 		'old_style' => false,

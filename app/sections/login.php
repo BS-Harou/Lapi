@@ -26,6 +26,7 @@ function login($user, $pass) {
 		$tmp2 = explode('=', $my_headers[5]);
 		$_SESSION['lapi_user'] = trim($tmp2[1]);
 
+		$app->user->nick = $_SESSION['lapi_user'];
 		$app->user->getSettings();
 		
 		return true;
