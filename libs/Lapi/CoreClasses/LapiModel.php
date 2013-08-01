@@ -172,4 +172,37 @@ class LapiModel {
 
 		return $rt;
 	}
+	public function omit($arr) {
+		$rt = array();
+		$keys = $this->keys();
+
+		for ($i=0; $i < count($keys); $i++) {
+			if (!in_array($keys[$i], $arr)) {
+				$rt[ $keys[$i] ] = $this->get( $keys[$i] );
+			}
+		}
+		
+		return $rt;
+	}
+	public function keys() {
+		$rt = array();
+		foreach($this->attributes as $key => $value) {
+			$rt[] = $key;
+		}
+		return $rt;
+	}
+	public function values() {
+		$rt = array();
+		foreach($this->attributes as $key => $value) {
+			$rt[] = $value;
+		}
+		return $rt;
+	}
+	public function pairs() {
+		$rt = array();
+		foreach($this->attributes as $key => $value) {
+			$rt[] = array($key, $value);
+		}
+		return $rt;
+	}
 }
