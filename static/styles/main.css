@@ -234,27 +234,27 @@ nav img {
 }
 
 .post-icon-reply {
-	background: url('/images/icons/reply14.png');
+	background: url('../images/icons/reply14.png');
 }
 
 .post-icon-bookmark {
-	background: url('/images/icons/star14.png');
+	background: url('../images/icons/star14.png');
 }
 
 .post-icon-bookmarked {
-	background: url('/images/icons/yellowStar14.png');
+	background: url('../images/icons/yellowStar14.png');
 }
 
 .post-icon-message {
-	background: url('/images/icons/message14.png');
+	background: url('../images/icons/message14.png');
 }
 
 .post-icon-delete {
-	background: url('/images/icons/trashcan14.png');
+	background: url('../images/icons/trashcan14.png');
 }
 
 .post-icon-original {
-	background: url('/images/icons/original14.png');
+	background: url('../images/icons/original14.png');
 }
 
 .nick .post-for {
@@ -376,22 +376,22 @@ textarea {
 	background-repeat: no-repeat;
 }
 a.sipka-vlevo {
-  background-image: url('/images/m-left.png');
+  background-image: url('../images/m-left.png');
 }
 a.sipka-vpravo {
-  background-image: url('/images/m-right.png');
+  background-image: url('../images/m-right.png');
 }
 a.sipka-dvlevo {
-  background-image: url('/images/md-left.png');
+  background-image: url('../images/md-left.png');
 }
 a.sipka-dvpravo {
-  background-image: url('/images/md-right.png');
+  background-image: url('../images/md-right.png');
 }
 a.sipka-plus {
-  background-image: url('/images/m-plus.png');
+  background-image: url('../images/m-plus.png');
 }
 a.sipka-srdce {
-  background-image: url('/images/m-heart.png');
+  background-image: url('../images/m-heart.png');
 }
 .right {
 	float: right !important;

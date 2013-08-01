@@ -63,6 +63,7 @@ class LapiApplication {
 	public $dirSections = 'app/sections';
 	public $dirModels = 'app/models';
 	public $dirTemplates = 'app/templates';
+	public $dirStatic = 'static';
 	public $user;
 	public function __construct() {
 		$this->database = new LapiDatabase(DB_USER, DB_PASS, DB_HOST, DB_DB);
@@ -214,6 +215,12 @@ class DefaultParams {
 		global $app;
 		return isset($_SESSION[$str]) ? $_SESSION[$str] : $app->user->settings->get($str);
 	}
+
+	public function DIR_STATIC() {
+		global $app;
+		return $app->dirStatic;
+	}
+
 	public function IS_LOGGED() {
 		return isset($_SESSION['lapi_lopuch']);
 	}
