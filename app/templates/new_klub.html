@@ -36,18 +36,18 @@
 					
 
 					<div class="post-buttons">
-						{{^is_mine}}<a href="./pridat?klub={{club}}&amp;to={{nick}}&amp;id={{id}}" class="post-icon-reply"></a>{{/is_mine}}
+						{{^is_mine}}<a href="./pridat?klub={{club}}&amp;to={{nick}}&amp;id={{id}}" class="post-icon-reply" title="Odpovědět"></a>{{/is_mine}}
 
 						{{#is_bookmarked}}
-						<a href="./smaz?post={{bookmark_id}}&amp;club={{club}}&amp;type=uschovna" class="post-icon-bookmarked"></a>
+						<a href="./smaz?post={{bookmark_id}}&amp;club={{club}}&amp;type=uschovna" class="post-icon-bookmarked" title="Odebrat z úschovny"></a>
 						{{/is_bookmarked}}
 
 						{{^is_bookmarked}}
-							<a href="./uschovna?club={{club}}&amp;id={{id_num}}&amp;action=add" class="post-icon-bookmark"></a>
+							<a href="./uschovna?club={{club}}&amp;id={{id_num}}&amp;action=add" class="post-icon-bookmark" title="Přidat do úschovny"></a>
 						{{/is_bookmarked}}
 						
-						{{^is_mine}}<a href="./poslat?to={{nick}}" class="post-icon-message"></a>{{/is_mine}}
-						{{#can_delete}}<a href="./smaz?post={{id_num}}&amp;klub={{club}}&amp;type=klub" onclick="deletePost('{{id_num}}', 'klub');return false;" class="post-icon-delete"></a>{{/can_delete}}
+						{{^is_mine}}<a href="./poslat?to={{nick}}" class="post-icon-message" title="Poslat soukromou zprávu"></a>{{/is_mine}}
+						{{#can_delete}}<a href="./smaz?post={{id_num}}&amp;klub={{club}}&amp;type=klub" onclick="deletePost('{{id_num}}', 'klub');return false;" class="post-icon-delete" title="Smazat příspěvek"></a>{{/can_delete}}
 					</div>
 
 				</div>

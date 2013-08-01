@@ -35,10 +35,10 @@
 
 					<div class="post-buttons">
 						{{#unread}}
-							<a class="post-icon-unread"></a>
+							<a class="post-icon-unread" title="Příjemce si zprávu zatím nepřečetl"></a>
 						{{/unread}}
-						{{^is_mine}}<a href="/poslat?to={{nick}}" class="post-icon-reply"></a>{{/is_mine}}
-						<a href="./smaz?post={{id}}&amp;type=posta" onclick="deletePost('{{id}}', 'posta');return false;" class="post-icon-delete"></a>
+						{{^is_mine}}<a href="/poslat?to={{nick}}" class="post-icon-reply" title="Odpovědět"></a>{{/is_mine}}
+						<a href="./smaz?post={{id}}&amp;type=posta" onclick="deletePost('{{id}}', 'posta');return false;" class="post-icon-delete" title="Smazat zprávu u sebe"></a>
 					</div>
 				</div>
 
