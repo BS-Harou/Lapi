@@ -46,12 +46,21 @@ function remove_stash_post($id) {
 	require_once($app->dirModels . '/Post.php');
 
 	$post = new Post(array(
-		'id' => $id
+		'id' => (int) $id
 	));
 
 	$post->destroy(array(
 		'where' => 'owner="' . $app->user->nick. '"'
 	));
+}
+
+function stash_redirect($club) {
+	global $app;
+	if (!isset($club) || !$club) {
+		$app->redirect('uschovna');	
+	} else {
+		$app->redirect('klub?klub=' . stripString($club));
+	}
 }
 
 /**
@@ -74,12 +83,7 @@ if (isset($_POST['type'])) {
 		$app->redirect('posta');
 	} if ($_POST['type'] == 'uschovna') {
 		remove_stash_post($_POST['post']);
-		if (!$_POST['club']) {
-			$app->redirect('uschovna');	
-		} else {
-			$app->redirect('klub?klub=' . stripString($_POST['club']));
-		}
-		
+		stash_redirect($_POST['club']);		
 	} else { // type=klub
 		remove_post($_POST['klub'], $_POST['post']);
 		$app->redirect('klub?klub=' . $_POST['klub']);
@@ -87,12 +91,7 @@ if (isset($_POST['type'])) {
 } else if (isset($_GET['type'])) {
 	if ($_GET['type'] == 'uschovna') {
 		remove_stash_post($_GET['post']);
-		if (!$_GET['club']) {
-			$app->redirect('uschovna');	
-		} else {
-			$app->redirect('klub?klub=' . stripString($_GET['club']));
-		}
-		
+		stash_redirect($_GET['club']);		
 	} else {
 		$params = new Params();
 		$params->type = stripString($_GET['type']);
