@@ -229,7 +229,8 @@ nav img {
 	display: inline-block;
 	width: 16px;
 	height: 16px;
-	margin-right: 8px;
+	margin-right: 4px;
+	margin-left: 4px;
 	background-repeat: no-repeat;
 }
 
