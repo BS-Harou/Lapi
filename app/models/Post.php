@@ -18,4 +18,5 @@ class Post extends LapiModel {
 
 class Posts extends LapiCollection {
 	public $db_table = 'uschovna';
+	public $model = 'Post';
 }

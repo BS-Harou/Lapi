@@ -5,6 +5,21 @@ class LapiCollection {
 	public $models = array();
 	public $db_table;
 
+	private function parseWhere($arr) {
+		if (!is_array($arr) || count($arr) == 0) {
+			return;
+		}
+
+		global $app;
+		$str = ' WHERE ';
+		foreach ($arr as $key => $value)  {
+			$str .= $app->database->escape($key) . '="' . $app->database->escape($value) . '" AND ';
+		}
+		$str = preg_replace('/\sAND\s$/', '', $str);
+
+		return $str;
+	}
+
 	public function add($obj) {
 		// if instance of LapiModel
 		$this->models[] = $obj;
@@ -51,7 +66,13 @@ class LapiCollection {
 
 		$q = 'SELECT SQL_CALC_FOUND_ROWS * FROM ' . $this->db_table;
 
-		if (isset($attr['where'])) 	$q .= ' WHERE ' . $attr['where'];
+		if (isset($attr['where'])) {
+			if (is_array($attr['where'])) {
+				$q .= $this->parseWhere($attr['where']);
+			} else {
+				$q .= ' WHERE ' . $attr['where'];
+			}
+		}	
 		if (isset($attr['order'])) 	$q .= ' ORDER BY ' . $attr['order'];
 		if (isset($attr['limit'])) 	$q .= ' LIMIT ' . $attr['limit'];
 
