@@ -154,7 +154,8 @@ function getNumber($str) {
 }
 
 function isValidCSSColor($color) {
-	if (!isset($color) || !$color) 	return false;
+	if (!isset($color))	return false;
+	if (!$color) return true;
 	if ($color == 'transparent') return true;
 	if (preg_match('/^#[0-9a-zA-Z]{6}$/', $color)) return true;
 	if (preg_match('/^#[0-9a-zA-Z]{3}$/', $color)) return true;

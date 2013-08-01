@@ -29,7 +29,9 @@ class Settings extends LapiModel {
 		$this->toBool('hide_old_images');
 		$this->toBool('linkify');
 
-		if ($this->get('new_post_color') && !isValidCSSColor($this->get('new_post_color'))) {
+		if (trim($this->get('new_post_color')) == '') {
+			$this->set('new_post_color', false);
+		} else if ($this->get('new_post_color') && !isValidCSSColor($this->get('new_post_color'))) {
 			return 'Formát barvy je chybný';
 		}
 
