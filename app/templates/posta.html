@@ -1,4 +1,14 @@
-<div class='posts-menu'>
+{{#SETTINGS_NEW_POST_COLOR}}
+<!-- Style for user specific settings -->
+<style>
+.nove-post {
+
+	background: {{SETTINGS_NEW_POST_COLOR}};
+}
+</style>
+{{/SETTINGS_NEW_POST_COLOR}}
+
+<div class="posts-menu">
 	<a href="posta?{{vlevo}}" class="sipka-vlevo {{vice}}"></a>
 	<a href="posta?{{dvlevo}}" class="sipka-dvlevo"></a>
 	<a href="posta?{{dvpravo}}" class="sipka-dvpravo"></a>
@@ -12,15 +22,16 @@
 		<table class="post">
 			<tr>
 
-
+				{{^SETTINGS_HIDE_AVATARS}}
 				<td>
 					<a href="/poslat?to={{nick}}">
 						<img alt="Avatar" class="avatar" data-candelete="posta" data-id="{{id}}" src="http://www.lapiduch.cz/{{avatar_url}}">
 					</a>
 				</td>
+				{{/SETTINGS_HIDE_AVATARS}}
 
 				<td>
-					<div>
+					<div class="{{is_new}}">
 						{{info}}
 						<span class="nick">{{nick}}</span>
 						<!-- nechat swapTime i u posty? -->
@@ -42,7 +53,7 @@
 </div>
 
 
-<div class='posts-menu'>
+<div class="posts-menu">
 	<a href="posta?{{vlevo}}" class="sipka-vlevo {{vice}}"></a>
 	<a href="posta?{{dvlevo}}" class="sipka-dvlevo"></a>
 	<a href="posta?{{dvpravo}}" class="sipka-dvpravo"></a>

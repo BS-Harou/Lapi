@@ -22,6 +22,7 @@ class Item {
 	public $info;
 	public $unread = false;
 	public $is_mine;
+	public $is_new;
 }
 
 $query = $_SERVER['QUERY_STRING'];
@@ -97,6 +98,13 @@ foreach ($elements as $post) {
 	$cas = $nick->parentNode->nextSibling->nextSibling->nextSibling;
 	while ($cas->nodeType != 3 && $cas->previousSibling) $cas = $cas->previousSibling; // pravděpodobně už neni potřeba
 	$item->time = getTime($cas->nodeValue);
+
+	/**
+	 * Is the post new?
+	 */
+
+	$is_new = $xpath->query('.//span[@class="PrA2"]', $post);	
+	$item->is_new = $is_new->length > 0 ? 'nove-post' : '';	
 
 	/**
 	 * Title ad text content
