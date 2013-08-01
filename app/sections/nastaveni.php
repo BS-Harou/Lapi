@@ -20,7 +20,8 @@ function change_password($oldp, $newp, $againp) {
 class Params extends DefaultParams {
 	public $errorMsg = false;
 	public function is_selected() {
-		$sp = $this->SETTINGS_START_PAGE();
+		global $app;
+		$sp = $app->user->settings->get('start_page');
 		return function ($text) use ($sp) {
 			if ($text === $sp) {
 				return 'selected';

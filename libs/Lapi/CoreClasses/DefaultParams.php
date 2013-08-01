@@ -19,35 +19,19 @@ class DefaultParams {
 		return 'http://' . $_SERVER['SERVER_NAME'];
 	}
 
-	public function SETTINGS_START_PAGE() {
-		return $this->getSettings('start_page');
+	public function __get($name) {
+		if (!preg_match("/^SETTINGS_/", $name)) {
+			return false;
+		}
+		$val = preg_replace("/^SETTINGS_/", '', strtolower($name));
+		return $this->getSettings($val);
 	}
 
-	public function SETTINGS_HIDE_AVATARS() {
-		return $this->getSettings('hide_avatars');
-	}
-
-	public function SETTINGS_RIGHT_CORNER() {
-		return $this->getSettings('right_corner');
-	}
-
-	public function SETTINGS_SHOW_SPOILERS() {
-		return $this->getSettings('show_spoilers');
-	}
-
-	public function SETTINGS_OLD_STYLE() {
-		return $this->getSettings('old_style');
-	}
-
-	public function SETTINGS_NEW_POST_COLOR() {
-		return $this->getSettings('new_post_color');
-	}
-
-	public function SETTINGS_HIDE_OLD_IMAGES() {
-		return $this->getSettings('hide_old_images');
-	}
-
-	public function SETTINGS_LINKIFY() {
-		return $this->getSettings('linkify');
+	public function __isset($name) {
+		if (!preg_match("/^SETTINGS_/", $name)) {
+			return false;
+		}
+		$val = preg_replace("/^SETTINGS_/", '', strtolower($name));
+		return $val != NULL;
 	}
 }
