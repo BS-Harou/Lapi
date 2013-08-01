@@ -46,7 +46,7 @@
 							<a href="./uschovna?club={{club}}&amp;id={{id_num}}&amp;action=add" class="post-icon-bookmark"></a>
 						{{/is_bookmarked}}
 						
-						<a href="./poslat?to={{nick}}" class="post-icon-message"></a>
+						{{^is_mine}}<a href="./poslat?to={{nick}}" class="post-icon-message"></a>{{/is_mine}}
 						{{#can_delete}}<a href="./smaz?post={{id_num}}&amp;klub={{club}}&amp;type=klub" onclick="deletePost('{{id_num}}', 'klub');return false;" class="post-icon-delete"></a>{{/can_delete}}
 					</div>
 

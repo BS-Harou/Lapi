@@ -80,7 +80,7 @@ foreach ($elements as $post) {
 	 * Is this post mine?
 	 */
 
-	$item->is_mine = $item->nick == $app->user->nick;
+	$item->is_mine = strtolower($item->nick) == $app->user->nick;
 
 	/**
 	 * has the recep. read the message?
