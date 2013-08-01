@@ -103,7 +103,7 @@ if (isset($_GET['action'])) {
 
 		$posts = new Posts();
 		$posts->fetch(array(
-			'where' => array('owner' => $post->get('owner'), 'club' => $post->get('club'), 'post_id' => $post->get('post_id'))
+			'where' => $post->pick(array('owner', 'club', 'post_id'))
 		));
 
 		if ($posts->length() == 0) {

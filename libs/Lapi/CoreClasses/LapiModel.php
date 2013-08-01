@@ -161,4 +161,15 @@ class LapiModel {
 		} 
 		return true;
 	}
+	public function pick($arr) {
+		$rt = array();
+
+		for ($i=0; $i < count($arr); $i++) {
+			if ($this->has($arr[$i])) {
+				$rt[ $arr[$i] ] = $this->get( $arr[$i] );
+			}
+		}
+
+		return $rt;
+	}
 }
