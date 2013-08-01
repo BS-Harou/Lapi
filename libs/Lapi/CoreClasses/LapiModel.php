@@ -9,6 +9,7 @@ class LapiModel {
 	public $cid = '';
 	public $validationError = '';
 	public $db_table;
+	public static $_idCounter = 0;
 	public function __construct($data=NULL) {
 		if ($data != NULL) {
 			foreach ($data as $key => $value) {
@@ -16,12 +17,17 @@ class LapiModel {
 			}
 		}
 
-		//$this->cid = hash();
+		$this->cid = self::uniqueId('c');
 		$this->fillDefaults();
 
 		if (method_exists($this, 'initialize')) {
 			$this->initialize();
 		}
+	}
+	private static function uniqueId($prefix) {
+		$id = ++self::$_idCounter . '';
+    	return $prefix ? $prefix . $id : $id;
+    	return 1;
 	}
 	public function fillDefaults() {
 		foreach ($this->defaults as $key => $value) {
@@ -181,7 +187,7 @@ class LapiModel {
 				$rt[ $keys[$i] ] = $this->get( $keys[$i] );
 			}
 		}
-		
+
 		return $rt;
 	}
 	public function keys() {
