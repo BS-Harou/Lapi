@@ -227,34 +227,34 @@ nav img {
 
 .post-buttons a {
 	display: inline-block;
-	width: 14px;
-	height: 14px;
-	margin-right: 4px;
+	width: 16px;
+	height: 16px;
+	margin-right: 8px;
 	background-repeat: no-repeat;
 }
 
 .post-icon-reply {
-	background: url('../images/icons/reply14.png');
+	background: url('../images/icons/reply16.png');
 }
 
 .post-icon-bookmark {
-	background: url('../images/icons/star14.png');
+	background: url('../images/icons/star16.png');
 }
 
 .post-icon-bookmarked {
-	background: url('../images/icons/yellowStar14.png');
+	background: url('../images/icons/yellowStar16.png');
 }
 
 .post-icon-message {
-	background: url('../images/icons/message14.png');
+	background: url('../images/icons/message16.png');
 }
 
 .post-icon-delete {
-	background: url('../images/icons/trashcan14.png');
+	background: url('../images/icons/trashcan16.png');
 }
 
 .post-icon-original {
-	background: url('../images/icons/original14.png');
+	background: url('../images/icons/original16.png');
 }
 
 .nick .post-for {
@@ -332,12 +332,8 @@ img[data-src] {
 	padding-top: 10px;
 	width: 40px !important;
 	height: 27px !important;
-	white-space: nowrap;
-	text-align: center;
 	background: black;
-	color: white;
-	content: "IMG";
-	font-size: 12px !important;
+	background: url('../images/icons/show_image.png') no-repeat center center black;
 	margin-right: 1px;
 	margin-bottom: 1px;
 	cursor: pointer;
