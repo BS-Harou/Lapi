@@ -1,6 +1,7 @@
 <?php
 
 function change_password($oldp, $newp, $againp) {
+	global $app;
 	$query = http_build_query(
 		array(
 			'oldpass' => iconv('utf-8', 'windows-1250', $oldp), 

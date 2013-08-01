@@ -31,6 +31,7 @@ function remove_msg_post($id) {
 }
 
 function remove_item($query, $url) {
+	global $app;
 	$ch = curl_init($url);
 	curl_setopt($ch, CURLOPT_COOKIE, 'lopuch=' . $_SESSION['lapi_lopuch'] . '; user=' . $app->user->nick); 
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

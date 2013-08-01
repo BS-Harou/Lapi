@@ -5,6 +5,7 @@ $klub = stripString($_GET['klub']);
  * Define functions
  */
 function send_post($club, $titulek, $body) {
+	global $app;
 	$query = http_build_query(
 		array(
 			'titulek' => iconv('utf-8', 'windows-1250', $titulek), 

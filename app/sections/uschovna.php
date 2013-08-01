@@ -7,6 +7,7 @@ require_once($app->dirModels . '/Post.php');
  */
 
 function get_post($club, $id) {
+	global $app;
 	$doc = getFile('http://www.lapiduch.cz/klub.php?klub=' . $club . '&to=' . $id);
 
 	$xpath = new DOMXpath($doc);
