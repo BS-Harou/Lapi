@@ -100,7 +100,15 @@ if (isset($_GET['action'])) {
 	if ($_GET['action'] == 'add') {
 		$data = get_post(stripString($_GET['club']), stripString($_GET['id']));
 		$post = new Post($data);
-		$post->save();
+
+		$posts = new Posts();
+		$posts->fetch(array(
+			'where' => array('owner' => $post->get('owner'), 'club' => $post->get('club'), 'post_id' => $post->get('post_id'))
+		));
+
+		if ($posts->length() == 0) {
+			$post->save();	
+		}
 		
 		$app->redirect('klub?klub=' . stripString($_GET['club']));
 	}
