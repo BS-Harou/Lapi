@@ -24,7 +24,7 @@ if (isset($_SESSION['lapi_lopuch']) && strlen($_SESSION['lapi_lopuch']) > 0) {
 		}
 	} else {
 		$params = new DefaultParams();
-		$app->redirect($params->SETTINGS_START_PAGE());
+		$app->redirect($app->user->settings->get('start_page'));
 	}
 } else {
 	include($app->dirSections . '/login.php');

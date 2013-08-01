@@ -1,7 +1,5 @@
 <?php
 
-include_once('app/models/User.php');
-
 function change_password($oldp, $newp, $againp) {
 	$query = http_build_query(
 		array(
@@ -11,7 +9,7 @@ function change_password($oldp, $newp, $againp) {
 		)
 	);
 	$ch = curl_init('http://www.lapiduch.cz/passwd.php');
-	curl_setopt($ch, CURLOPT_COOKIE, 'lopuch=' . $_SESSION['lapi_lopuch'].'; user=' . $_SESSION['lapi_user']); 
+	curl_setopt($ch, CURLOPT_COOKIE, 'lopuch=' . $_SESSION['lapi_lopuch'].'; user=' . $app->user->nick); 
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	curl_setopt($ch, CURLOPT_POST, 1);
 	curl_setopt($ch, CURLOPT_POSTFIELDS, $query);
@@ -36,9 +34,8 @@ $params = new Params();
 
 if (isset($_POST['settings_type'])) {
 	if ($_POST['settings_type'] == 'mobile') {
-		$user = new User();
-		$user->setSettings($_POST);
-		$params->errorMsg = $user->saveSettings();
+		$app->user->setSettings($_POST);
+		$params->errorMsg = $app->user->saveSettings();
 	} else if ($_POST['settings_type'] == 'pass') {
 		if (!isset($_POST['newp']) || !$_POST['newp']) {
 			$params->errorMsg = 'Nové heslo nesmí být prázdné';

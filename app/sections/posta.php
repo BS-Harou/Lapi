@@ -79,7 +79,7 @@ foreach ($elements as $post) {
 	 * Is this post mine?
 	 */
 
-	$item->is_mine = $item->nick == $_SESSION['lapi_user'];
+	$item->is_mine = $item->nick == $app->user->nick;
 
 	/**
 	 * has the recep. read the message?
@@ -110,7 +110,7 @@ foreach ($elements as $post) {
 
 	$text->removeChild($text->firstChild); 
 	$item->text = get_inner_html($text);
-	if ($user->settings->linkify) {
+	if ($app->user->settings->get('linkify')) {
 		$item->text = linkify($item->text);
 	}
 
@@ -121,7 +121,7 @@ foreach ($elements as $post) {
 	$params->items[] = $item;
 }
 
-if ($params->SETTINGS_OLD_STYLE()) {
+if ($app->user->settings('old_style')) {
 	render('posta', $params);
 } else {
 	render('new_posta', $params);	

@@ -2,7 +2,7 @@
 class Params extends DefaultParams {
 	public $items;
 	public $category_name;
-	public $filled_list;
+	public $has_items;
 	public $show_search = false;
 }
 
@@ -35,7 +35,7 @@ if (!$elements) {
 
 
 $params->category_name = $catName->item(0)->nodeValue;
-$params->filled_list = $elements->length > 0;
+$params->has_items = $elements->length > 0;
 
 foreach ($elements as $element) {
 	$item = new Item();

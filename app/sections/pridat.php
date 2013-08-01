@@ -15,7 +15,7 @@ function send_post($club, $titulek, $body) {
 		)
 	);
 	$ch = curl_init ('http://www.lapiduch.cz/klub.php?klub=' . $club);
-	curl_setopt($ch, CURLOPT_COOKIE, 'lopuch=' . $_SESSION['lapi_lopuch'].'; user=' . $_SESSION['lapi_user']); 
+	curl_setopt($ch, CURLOPT_COOKIE, 'lopuch=' . $_SESSION['lapi_lopuch'].'; user=' . $app->user->nick); 
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	curl_setopt($ch, CURLOPT_POST, 1);
 	curl_setopt($ch, CURLOPT_POSTFIELDS, $query);

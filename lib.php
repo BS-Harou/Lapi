@@ -45,6 +45,10 @@ class LapiDatabase {
 		var_dump($this->mysqli);
 	}
 
+	public function escape($str) {
+		return $this->mysqli->real_escape_string($str);
+	}
+
 	private function realConnect() {
 		$this->mysqli = new Mysqli($this->host, $this->username, $this->password, $this->database);
 		$this->isConnected = $this->mysqli->connect_errno === 0 ? true : false;
@@ -59,8 +63,10 @@ class LapiApplication {
 	public $dirSections = 'app/sections';
 	public $dirModels = 'app/models';
 	public $dirTemplates = 'app/templates';
+	public $user;
 	public function __construct() {
 		$this->database = new LapiDatabase(DB_USER, DB_PASS, DB_HOST, DB_DB);
+		$this->user = new LapiUser();
 	}
 	public function redirect($section) {
 		header('Location: /' . $section);
@@ -69,7 +75,7 @@ class LapiApplication {
 }
 
 $app = new LapiApplication();
-$GLOBALS["app"] = $app;
+$GLOBALS['app'] = $app;
 
 
 /**
@@ -93,7 +99,7 @@ function callFile($url) {
 	}
 
 	$ch = curl_init($url);
-	curl_setopt($ch, CURLOPT_COOKIE, 'lopuch='. $_SESSION['lapi_lopuch'] .'; user='. $_SESSION['lapi_user']); 
+	curl_setopt($ch, CURLOPT_COOKIE, 'lopuch='. $_SESSION['lapi_lopuch'] .'; user='. $app->user->nick); 
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	//curl_setopt ($ch, CURLOPT_FOLLOWLOCATION, true);
 
@@ -202,14 +208,9 @@ function stripString($str) {
  */
 
 class DefaultParams {
-	protected $_user;
 	private function getSettings($str) {
 		global $app;
-		if (!isset($_user)) {
-			require_once($app->dirModels . '/User.php');
-			$_user = new User();
-		}
-		return isset($_SESSION[$str]) ? $_SESSION[$str] : $_user->settings->{$str};
+		return isset($_SESSION[$str]) ? $_SESSION[$str] : $app->user->settings->get($str);
 	}
 	public function IS_LOGGED() {
 		return isset($_SESSION['lapi_lopuch']);
@@ -266,6 +267,68 @@ function render($name, $params = NULL) {
 
 	echo $m->render($body, $params);
 }
+
+/**
+ * Lapi User
+ */
+
+class LapiUser {
+	public $nick = NULL;
+	public $settings;
+	public function __construct($nick=NULL) {
+		require_once($app->dirModels . '/Settings.php');
+		$this->settings = new Settings();
+		if ($nick != NULL) {
+			$this->nick = stripString($nick);
+			return;
+		}
+
+		if (!isset($_SESSION['lapi_user'])) return;
+		$this->nick = $_SESSION['lapi_user'];
+		$this->getSettings();
+	}
+
+	public function getSettings() {
+		$this->settings->set('nick', $this->nick);
+
+		if (!isset($_SESSION['settings_start_page'])) {
+			$this->settings->fetch();
+			$this->settingsToSession();
+		} else {
+			foreach($this->settings->attributes as $key => $value) {
+				$this->settings->set($key, isset($_SESSION['settings_' . $key]) ? $_SESSION['settings_' . $key] : $value);
+			}
+		}
+
+		return $this->settings;
+	}
+
+	public function setSettings($arr) {
+		foreach($this->settings->attributes as $key => $value) {
+			$arr[$key] = $arr[$key] === 'true' ? true : $arr[$key];
+			$arr[$key] = $arr[$key] === 'false' ? false : $arr[$key];
+			$this->settings->set($key, $arr[$key]);
+		}
+	}
+
+	public function saveSettings() {
+
+		if (!$this->settings->save()) {
+			return $settings->validationError;
+		}
+
+		$this->settingsToSession();
+
+		return false; // false = no error, neccesary for Mustache	
+	}
+
+	public function settingsToSession() {
+		foreach($this->settings->attributes as $key => $value) {
+			$_SESSION['settings_' . $key] = $value;
+		}
+	}
+}
+
 
 /**
  * Default Models & Collections
@@ -325,11 +388,12 @@ class LapiModel {
 	public function save() {
 		global $app;
 		if (!isset($this->db_table)) {
+			$this->validationError = 'MySQL error! Missing table name.';
 			return false;
 		}
 
 		if (!$this->isValid()) {
-			return $this->validationError;
+			return false;
 		}
 
 		$is_new = $this->isNew();
@@ -338,10 +402,10 @@ class LapiModel {
 
 		foreach ($this->attributes as $key => $value) {
 			if ($is_new) {
-				$sqlStringA .= $key . ',';
-				$sqlStringB .= '"' . $value . '",';
+				$sqlStringA .= $app->database->escape($key) . ',';
+				$sqlStringB .= '"' . $app->database->escape($value) . '",';
 			} else {
-				$sqlStringA .= $key . '="' . value . '",';
+				$sqlStringA .= $app->database->escape($key) . '="' . $app->database->escape($value) . '",';
 			}
 		}
 
@@ -354,7 +418,13 @@ class LapiModel {
 			$q = 'UPDATE ' . $this->db_table . ' SET ' . $sqlStringB;
 		}
 
-		return !!@$app->database->query($q);
+		$rt = !!@$app->database->query($q);
+
+		if (!$rt) {
+			throw 'LapiModel Error. Can\'t save model to MySQL');
+		}
+
+		return true;
 	}
 	public function fetch() {
 		global $app;
@@ -362,7 +432,7 @@ class LapiModel {
 			return false;
 		}
 
-		$q = 'SELECT * FROM ' . $this->db_table . ' WHERE ' . $this->idAttribute . '=' . $this->getId() . ' LIMIT 1';
+		$q = 'SELECT * FROM ' . $this->db_table . ' WHERE ' . $this->idAttribute . '=' . $app->database->escape($this->getId()) . ' LIMIT 1';
 
 		$rt = $app->database->query($q);
 
@@ -380,21 +450,21 @@ class LapiModel {
 	}
 	public function destroy($attr) {
 		global $app;
-		if (!isset($this->db_table)) {
+		if (!isset($this->db_table) || !$this->getId()) {
 			return false;
 		}
 
-		if (!$this->getId()) {
-			return false;
-		}
-
-		$q = 'DELETE FROM ' . $this->db_table . ' WHERE ' . $this->idAttribute . '="' . $this->getId() . '"';
-
-		if (isset($attr['where'])) 	$q .= ' AND ' . $attr['where'];
-
+		$q = 'DELETE FROM ' . $this->db_table . ' WHERE ' . $this->idAttribute . '="' . $app->database->escape($this->getId()) . '"';
+		if (isset($attr['where'])) $q .= ' AND ' . $attr['where'];
 		$q .= ' LIMIT 1';
 
-		return !!@$app->database->query($q);
+		$rt = !!@$app->database->query($q);
+
+		if (!$rt) {
+			throw 'LapiModel Error. Can\'t remove model from MySQL');
+		}
+
+		return true;
 	}
 	public function validate() {
 		return 0;
@@ -415,7 +485,7 @@ class LapiModel {
 				return false;
 			}
 
-			$rt = $app->database->query('SELECT 1 FROM ' . $this->db_table . ' WHERE ' . $this->idAttribute . '=' . $this->getId() . ' LIMIT 1');
+			$rt = $app->database->query('SELECT 1 FROM ' . $this->db_table . ' WHERE ' . $this->idAttribute . '=' . $app->database->escape($this->getId()) . ' LIMIT 1');
 			return !$rt || $rt->num_rows === 0;
 		}
 		return true;

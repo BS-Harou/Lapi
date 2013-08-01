@@ -61,7 +61,7 @@ function get_post($club, $id) {
 	$item['text'] = addslashes(fix_replies($item['text']));
 
 	$item['club'] = $club;
-	$item['owner'] = $_SESSION['lapi_user'];
+	$item['owner'] = $app->user->nick;
 
 	return $item;
 
@@ -116,7 +116,7 @@ if (isset($offset) && $offset > 0) {
 
 $posts = new Posts();
 $posts->fetch(array(
-	'where' => 'owner="' . stripString($_SESSION['lapi_user']) . '"',
+	'where' => 'owner="' . stripString($app->user->nick) . '"',
 	'order' => 'id DESC',
 	'limit' => $limit
 ));

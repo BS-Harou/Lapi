@@ -47,14 +47,11 @@ if (is_null($elements) || $elements->length == 0) {
 	$app->redirect('odhlasit');
 }
 
-require_once($app->dirModels . '/User.php');
 require_once($app->dirModels . '/Post.php');
-
-$user = new User();
 
 $posts = new Posts();
 $posts->fetch(array(
-	'where' => 'club="' . $klub . '" AND owner="' . $user->nick . '"'
+	'where' => 'club="' . $klub . '" AND owner="' . $app->user->nick . '"'
 ));
 
 
@@ -116,7 +113,7 @@ foreach ($elements as $post) {
 	 * Is this post mine?
 	 */
 
-	$item->is_mine = $item->nick == $_SESSION['lapi_user'];
+	$item->is_mine = $item->nick == $app->user->nick;
 
 	/**
 	 * Time
@@ -153,17 +150,17 @@ foreach ($elements as $post) {
 	$item->title = $title->nodeValue;
 
 	$text->removeChild($text->firstChild); // remove <br />
-	if ($user->settings->show_spoilers) {
+	if ($app->user->settings->get('show_spoilers')) {
 		removeSpoilers($text);
 	}
-	if ($is_new->length == 0 && $user->settings->hide_old_images) {
+	if ($is_new->length == 0 && $app->user->settings->get('hide_old_images')) {
 		hideImages($text);
 	}
 
 	$item->text = get_inner_html($text);
 	$item->text = fix_replies($item->text);
 
-	if ($user->settings->linkify) {
+	if ($app->user->settings->get('linkify')) {
 		$item->text = linkify($item->text);
 	}
 
@@ -185,7 +182,7 @@ foreach ($elements as $post) {
 }
 
 
-if ($params->SETTINGS_OLD_STYLE()) {
+if ($app->user->settings->get('old_style')) {
 	render('klub', $params);
 } else {
 	render('new_klub', $params);	

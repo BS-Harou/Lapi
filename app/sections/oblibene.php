@@ -1,7 +1,7 @@
 <?php
 
 class Params extends DefaultParams {
-	public $filled_list;
+	public $has_items;
 	public $items;
 }
 
@@ -21,7 +21,7 @@ if (!$elements) {
 }
 
 $params = new Params();
-$params->filled_list = $elements->length > 0;
+$params->has_items = $elements->length > 0;
 
 
 foreach ($elements as $element) {

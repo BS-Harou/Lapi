@@ -14,7 +14,7 @@
 
 <h1>Kategorie</h1>
 
-{{#filled_list}}
+{{#has_items}}
 	<div class="list">
 
 		{{#items}}
@@ -22,8 +22,8 @@
 		{{/items}}
 
 	</div>
-{{/filled_list}}
+{{/has_items}}
 
-{{^filled_list}}
+{{^has_items}}
 	<p class="msg">Žádné kategorie (wtf?)<br><br><img src="./images/ghost.png" width="130"></p>
-{{/filled_list}}
+{{/has_items}}

@@ -1,7 +1,7 @@
 <?php
 
 class Params extends DefaultParams {
-	public $filled_list;
+	public $has_items;
 	public $items;
 	public $old_search;
 }
@@ -20,7 +20,7 @@ if (is_null($elements)) {
 }
 
 $params = new Params();
-$params->filled_list = $elements->length > 0;
+$params->has_items = $elements->length > 0;
 // $params->items = array();
 $params->old_search = isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '';
 

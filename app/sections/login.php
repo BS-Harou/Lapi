@@ -5,7 +5,6 @@
  */
 function login($user, $pass) {
 	global $app;
-	require_once($app->dirModels . '/User.php');
 
 	$postdata = http_build_query(array('user' => $user, 'pass' => $pass));
 
@@ -27,14 +26,7 @@ function login($user, $pass) {
 		$tmp2 = explode('=', $my_headers[5]);
 		$_SESSION['lapi_user'] = trim($tmp2[1]);
 
-
-		$user = new User();
-		$settings = $user->settings;
-		if ($settings != NULL) {
-			foreach ($settings as $key => $value) {
-				$_SESSION['settings_' . $key] = $value;
-			}
-		}
+		$app->user->getSettings();
 		
 		return true;
 	}
@@ -57,7 +49,7 @@ $params = new Params();
  */
 
 if ($params->IS_LOGGED()) {
-	$app->redirect( $params->SETTINGS_START_PAGE() );
+	$app->redirect( $app->user->settings->get('start_page') );
 }
 
 if (isset($_GET['odhlasit'])) {
@@ -69,7 +61,7 @@ if (isset($_GET['odhlasit'])) {
  */
 if (isset($_POST['user'])) {
 	if (login($_POST['user'], $_POST['pass'])) {
-		$app->redirect( $params->SETTINGS_START_PAGE() );
+		$app->redirect( $app->user->settings->get('start_page') );
 	} else {
 		$params->error_msg = 'Nepodařilo se přihlásit.';
 	}

@@ -1,7 +1,7 @@
 <h1>Nové</h1>
-{{#filled_list}}
+{{#has_items}}
 	<div class="list">
-{{/filled_list}}
+{{/has_items}}
 {{#items}}
 	<a href="/klub?{{url}}">
 		{{name}}
@@ -10,12 +10,12 @@
 		{{/new_count}}
 	</a>
 {{/items}}
-{{#filled_list}}
+{{#has_items}}
 	</div>
-{{/filled_list}}
+{{/has_items}}
 
-{{^filled_list}}
+{{^has_items}}
 	<p class="msg">Nic nového<br><br><a href="./nove"><img src="./images/ghost.png" width="130"></a></p>
-{{/filled_list}}
+{{/has_items}}
 	
 
