@@ -69,29 +69,16 @@ class LapiModel {
 			return false;
 		}
 
-		$is_new = $this->isNew();
-		$sqlStringA = '';
-		$sqlStringB = '';
-
-		foreach ($this->attributes as $key => $value) {
-			if ($is_new) {
-				$sqlStringA .= $app->db->escape($key) . ',';
-				$sqlStringB .= '"' . $app->db->escape($value) . '",';
-			} else {
-				$sqlStringA .= $app->db->escape($key) . '="' . $app->db->escape($value) . '",';
-			}
-		}
-
-		$sqlStringA = preg_replace('/,$/', '', $sqlStringA);
-		$sqlStringB = preg_replace('/,$/', '', $sqlStringB);
-
-		if ($is_new) {
-			$q = 'INSERT INTO ' . $this->db_table . ' (' . $sqlStringA . ') VALUES(' . $sqlStringB . ')';
+		if ($this->isNew()) {
+			$rt = !!$app->db->insert($this->db_table, $this->attributes);
 		} else {
-			$q = 'UPDATE ' . $this->db_table . ' SET ' . $sqlStringA . ' WHERE ' . $this->idAttribute . '="' . $app->db->escape($this->getId()) . '" LIMIT 1';
+			$rt = !!$app->db->update($this->db_table, $this->attributes, array(
+				'where' => array(
+					$this->idAttribute => $this->getId()
+				),
+				'limit' => '1'
+			));
 		}
-
-		$rt = !!@$app->db->query($q);
 
 		if (!$rt) {
 			throw new Exception('LapiModel Error. Can\'t save model to MySQL');

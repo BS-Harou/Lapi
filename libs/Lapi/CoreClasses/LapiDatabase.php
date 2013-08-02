@@ -41,6 +41,37 @@ class LapiDatabase {
 		return $this->query($q);
 	}
 
+	public function insert($table, $data, $attr=NULL) {
+		$sqlStringA = '';
+		$sqlStringB = '';
+
+		foreach ($data as $key => $value) {			
+			$sqlStringA .= '`' . $this->escape($key) . '`,';
+			$sqlStringB .= '"' . $this->escape($value) . '",';
+		}
+		$sqlStringA = preg_replace('/,$/', '', $sqlStringA);
+		$sqlStringB = preg_replace('/,$/', '', $sqlStringB);
+
+		$q = 'INSERT INTO `' . $this->escape($table) . '` (' . $sqlStringA . ') VALUES(' . $sqlStringB . ')';
+
+		return $this->query($q);
+	}
+
+	public function update($table, $data, $attr=NULL) {
+		$sqlString = '';
+
+		foreach ($data as $key => $value) {			
+			$sqlString .= '`' . $this->escape($key) . '`="' . $this->escape($value) . '",';
+		}
+		$sqlString = preg_replace('/,$/', '', $sqlString);
+
+		$q = 'UPDATE `' . $this->escape($table) . '` SET ' . $sqlString;
+		if (isset($attr['where'])) $q .= self::parseWhere($attr['where']);
+		if (isset($attr['limit'])) $q .= ' LIMIT ' . $attr['limit'];
+
+
+		return $this->query($q);
+	}
 
 	public function dump() {
 		var_dump($this->mysqli);
