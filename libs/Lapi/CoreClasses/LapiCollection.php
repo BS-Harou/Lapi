@@ -109,7 +109,7 @@ class LapiCollection {
 		return $data->amount;
 	}
 
-	public function firstWhere($attrs) {
+	public function findWhere($attrs) {
 		for ($i=0; $i < $this->length(); $i++) {
 			foreach ($attrs as $key => $value) {
 				if ($this->at($i)->get($key) != $attrs[$key]) {

@@ -133,7 +133,7 @@ foreach ($elements as $post) {
 	/**
 	 * Is the POST bookmarked by user?
 	 */
-	$bookmark = $posts->firstWhere(array('post_id' => $item->id));
+	$bookmark = $posts->findWhere(array('post_id' => $item->id));
 	$item->is_bookmarked =  $bookmark != NULL;
 	if ($item->is_bookmarked) {
 		$item->bookmark_id = $bookmark->get('id');
