@@ -2,9 +2,9 @@
 
 Ke zprovoznění na vlastním serveru je třeba nastavit několik věcí:
 
-* Nastavit přihlašovací pdaje k databázi v souboru db_login.php
-* Pokud nejsou data přímo rootu domény/subodomény, ale v nějaké složce tak upravit "RewriteBase /" v souboru .htaccess na "RewriteBase /subfolder"
-* Vytvořit potřebné tabulky MySQL tabulky
+* Nastavit přihlašovací údaje k databázi v souboru db_login.php
+* Pokud nejsou data přímo v rootu domény/subdomény, ale v nějaké složce tak upravit "RewriteBase /" v souboru .htaccess na "RewriteBase /subfolder"
+* Vytvořit potřebné MySQL tabulky
 
 ```sql
 CREATE TABLE IF NOT EXISTS `uschovna` (
@@ -37,4 +37,4 @@ CREATE TABLE IF NOT EXISTS `user_settings` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 ```
 
-Ke správnému fungování je ptřeba PHP 5.3 a vyšší
+Ke správnému fungování je třeba PHP 5.3 a vyšší!
