@@ -1,7 +1,5 @@
 <?php
 
-// u posty neresim zvyrazneni novych zprav
-
 class Params extends DefaultParams {
 	public $items;
 	public $url_vlevo;
