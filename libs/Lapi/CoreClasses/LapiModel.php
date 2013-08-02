@@ -4,7 +4,7 @@
 
 class LapiModel {
 	public $attributes = array();
-	public $idAttribute =  'id';
+	public $idAttribute = 'id';
 	public $defaults = array();
 	public $cid = '';
 	public $validationError = '';
@@ -26,8 +26,7 @@ class LapiModel {
 	}
 	private static function uniqueId($prefix) {
 		$id = ++self::$_idCounter . '';
-    	return $prefix ? $prefix . $id : $id;
-    	return 1;
+		return $prefix ? $prefix . $id : $id;
 	}
 	public function fillDefaults() {
 		foreach ($this->defaults as $key => $value) {
