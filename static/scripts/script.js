@@ -6,7 +6,7 @@ var
 	post
 ;
 
-form.action = '/smaz';
+form.action = './smaz';
 form.method = 'post';
 
 d.addEventListener('touchstart', handleTouchStart, false);

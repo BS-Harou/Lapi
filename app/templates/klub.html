@@ -8,15 +8,15 @@
 </style>
 {{/SETTINGS_NEW_POST_COLOR}}
 
-<div class='posts-menu'>
-	<a href="klub?{{vlevo}}" class="sipka-vlevo {{vice}}"></a>
-	<a href="klub?{{dvlevo}}" class="sipka-dvlevo"></a>
-	<a href="klub?{{dvpravo}}" class="sipka-dvpravo"></a>
-	<a href="klub?{{vpravo}}" class="sipka-vpravo"></a>
+<div class="posts-menu">
+	<a href="./klub?{{vlevo}}" class="sipka-vlevo {{vice}}"></a>
+	<a href="./klub?{{dvlevo}}" class="sipka-dvlevo"></a>
+	<a href="./klub?{{dvpravo}}" class="sipka-dvpravo"></a>
+	<a href="./klub?{{vpravo}}" class="sipka-vpravo"></a>
 	{{#can_add}}
 		<a href="./pridat?klub={{club}}" class="sipka-plus"></a>
 	{{/can_add}}
-	<a href="klub?klub={{fav_url}}" class="sipka-srdce right {{favourite}}"></a>
+	<a href="./klub?klub={{fav_url}}" class="sipka-srdce right {{favourite}}"></a>
 </div>
 
 <h1>{{club_name}}</h1>
@@ -28,7 +28,7 @@
 			<tr>
 				{{^SETTINGS_HIDE_AVATARS}}
 					<td>
-						<a href="/pridat?klub={{club}}&amp;to={{nick}}&amp;id={{id}}">
+						<a href="./pridat?klub={{club}}&amp;to={{nick}}&amp;id={{id}}">
 							<img alt="Avatar" class="avatar" {{#can_delete}}data-candelete="klub"{{/can_delete}} data-id="{{id_num}}" src="http://www.lapiduch.cz/{{avatar_url}}">
 						</a>
 					</td>
@@ -61,14 +61,14 @@
 </div>
 
 
-<div class='posts-menu'>
-	<a href="klub?{{vlevo}}" class="sipka-vlevo {{more_new_posts}}"></a>
-	<a href="klub?{{dvlevo}}" class="sipka-dvlevo"></a>
-	<a href="klub?{{dvpravo}}" class="sipka-dvpravo"></a>
-	<a href="klub?{{vpravo}}" class="sipka-vpravo"></a>
+<div class="posts-menu">
+	<a href="./klub?{{vlevo}}" class="sipka-vlevo {{more_new_posts}}"></a>
+	<a href="./klub?{{dvlevo}}" class="sipka-dvlevo"></a>
+	<a href="./klub?{{dvpravo}}" class="sipka-dvpravo"></a>
+	<a href="./klub?{{vpravo}}" class="sipka-vpravo"></a>
 	{{#can_add}}
 		<a href="./pridat?klub={{club}}" class="sipka-plus"></a>
 	{{/can_add}}
-	<a href="klub?klub={{fav_url}}" class="sipka-srdce right {{favourite}}"></a>
+	<a href="./klub?klub={{fav_url}}" class="sipka-srdce right {{favourite}}"></a>
 </div>
 

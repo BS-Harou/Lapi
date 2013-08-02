@@ -57,7 +57,7 @@ $to = htmlspecialchars($_GET['to']);
 $id = getNumber(htmlspecialchars($_GET['id']));
 $ta = '';
 if ($to && $id) {
-	$ta = '<a href="klub.php?klub='.$klub.'&to='.$id.'" class="reply">'.$to.' ['.$id.']</a>: ';
+	$ta = '<a href="./klub.php?klub='.$klub.'&to='.$id.'" class="reply">'.$to.' ['.$id.']</a>: ';
 }
 
 /**

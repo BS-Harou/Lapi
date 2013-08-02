@@ -9,10 +9,10 @@
 {{/SETTINGS_NEW_POST_COLOR}}
 
 <div class='posts-menu'>
-	<a href="posta?{{vlevo}}" class="sipka-vlevo {{vice}}"></a>
-	<a href="posta?{{dvlevo}}" class="sipka-dvlevo"></a>
-	<a href="posta?{{dvpravo}}" class="sipka-dvpravo"></a>
-	<a href="posta?{{vpravo}}" class="sipka-vpravo"></a>
+	<a href="./posta?{{vlevo}}" class="sipka-vlevo {{vice}}"></a>
+	<a href="./posta?{{dvlevo}}" class="sipka-dvlevo"></a>
+	<a href="./posta?{{dvpravo}}" class="sipka-dvpravo"></a>
+	<a href="./posta?{{vpravo}}" class="sipka-vpravo"></a>
 	<a href="./poslat" class="sipka-plus"></a>
 </div>
 
@@ -22,7 +22,7 @@
 		<div class="post new-post {{is_new}}">
 			<div class="post-info">
 				{{^SETTINGS_HIDE_AVATARS}}
-					<a href="/poslat?to={{nick}}" style="float: left">
+					<a href="./poslat?to={{nick}}" style="float: left">
 						<img alt="Avatar" class="avatar" data-candelete="posta" data-id="{{id}}" src="http://www.lapiduch.cz/{{avatar_url}}">
 					</a>
 				{{/SETTINGS_HIDE_AVATARS}}
@@ -37,7 +37,7 @@
 						{{#unread}}
 							<a class="post-icon-unread" title="Příjemce si zprávu zatím nepřečetl"></a>
 						{{/unread}}
-						{{^is_mine}}<a href="/poslat?to={{nick}}" class="post-icon-reply" title="Odpovědět"></a>{{/is_mine}}
+						{{^is_mine}}<a href="./poslat?to={{nick}}" class="post-icon-reply" title="Odpovědět"></a>{{/is_mine}}
 						<a href="./smaz?post={{id}}&amp;type=posta" onclick="deletePost('{{id}}', 'posta');return false;" class="post-icon-delete" title="Smazat zprávu u sebe"></a>
 					</div>
 				</div>
@@ -64,9 +64,9 @@
 
 
 <div class='posts-menu'>
-	<a href="posta?{{vlevo}}" class="sipka-vlevo {{vice}}"></a>
-	<a href="posta?{{dvlevo}}" class="sipka-dvlevo"></a>
-	<a href="posta?{{dvpravo}}" class="sipka-dvpravo"></a>
-	<a href="posta?{{vpravo}}" class="sipka-vpravo"></a>
+	<a href="./posta?{{vlevo}}" class="sipka-vlevo {{vice}}"></a>
+	<a href="./posta?{{dvlevo}}" class="sipka-dvlevo"></a>
+	<a href="./posta?{{dvpravo}}" class="sipka-dvpravo"></a>
+	<a href="./posta?{{vpravo}}" class="sipka-vpravo"></a>
 	<a href="./poslat" class="sipka-plus"></a>
 </div>

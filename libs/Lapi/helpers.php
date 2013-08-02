@@ -43,7 +43,7 @@ function get_inner_html($node) {
 }
 
 function fix_replies($html) {
-	return preg_replace('/href=\"klub\.php\?/', 'href="klub?', $html);
+	return preg_replace('/href=\"klub\.php\?/', 'href="./klub?', $html);
 }
 
 function removeSpoilers($node) {

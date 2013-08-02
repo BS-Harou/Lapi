@@ -16,7 +16,8 @@ class DefaultParams {
 	}
 
 	public function BASE_URL() {
-		return 'http://' . $_SERVER['SERVER_NAME'];
+		global $app;
+		return 'http://' . $_SERVER['SERVER_NAME'] . $app->getRealRoot();
 	}
 
 	public function __get($name) {

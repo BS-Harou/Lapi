@@ -29,7 +29,6 @@ require_once('libs/Lapi/init.php');
 /**
  * "Router"
  */
-
 if (isset($_GET['str'])) {
 	$str = stripString($_GET['str']);	
 } else {

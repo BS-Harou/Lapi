@@ -1,5 +1,6 @@
 RewriteEngine on
-RewriteRule  ^(\w+)\/?$  /index.php?str=$1  [QSA,L]
+RewriteBase /
+RewriteRule  ^(\w+)\/?$  index.php?str=$1  [QSA,L]
 
 <IfModule mod_expires.c>
 ExpiresActive On
