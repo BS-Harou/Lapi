@@ -330,9 +330,8 @@ nav img {
 img[data-src] {
 	box-sizing: content-box;
 	display: inline-block;
-	padding-top: 10px;
 	width: 40px !important;
-	height: 27px !important;
+	height: 37px !important;
 	background: black;
 	background: url('../images/icons/show_image.png') no-repeat center center black;
 	margin-right: 1px;
