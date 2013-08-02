@@ -65,9 +65,7 @@ class LapiModel {
 		if (!isset($this->db_table)) {
 			$this->validationError = 'MySQL error! Missing table name.';
 			return false;
-		}
-
-		if (!$this->isValid()) {
+		} else if (!$this->isValid()) {
 			return false;
 		}
 
@@ -77,10 +75,10 @@ class LapiModel {
 
 		foreach ($this->attributes as $key => $value) {
 			if ($is_new) {
-				$sqlStringA .= $app->database->escape($key) . ',';
-				$sqlStringB .= '"' . $app->database->escape($value) . '",';
+				$sqlStringA .= $app->db->escape($key) . ',';
+				$sqlStringB .= '"' . $app->db->escape($value) . '",';
 			} else {
-				$sqlStringA .= $app->database->escape($key) . '="' . $app->database->escape($value) . '",';
+				$sqlStringA .= $app->db->escape($key) . '="' . $app->db->escape($value) . '",';
 			}
 		}
 
@@ -90,10 +88,10 @@ class LapiModel {
 		if ($is_new) {
 			$q = 'INSERT INTO ' . $this->db_table . ' (' . $sqlStringA . ') VALUES(' . $sqlStringB . ')';
 		} else {
-			$q = 'UPDATE ' . $this->db_table . ' SET ' . $sqlStringA . ' WHERE ' . $this->idAttribute . '="' . $app->database->escape($this->getId()) . '" LIMIT 1';
+			$q = 'UPDATE ' . $this->db_table . ' SET ' . $sqlStringA . ' WHERE ' . $this->idAttribute . '="' . $app->db->escape($this->getId()) . '" LIMIT 1';
 		}
 
-		$rt = !!@$app->database->query($q);
+		$rt = !!@$app->db->query($q);
 
 		if (!$rt) {
 			throw new Exception('LapiModel Error. Can\'t save model to MySQL');
@@ -107,9 +105,13 @@ class LapiModel {
 			return false;
 		}
 
-		$q = 'SELECT * FROM ' . $this->db_table . ' WHERE ' . $this->idAttribute . '="' . $app->database->escape($this->getId()) . '" LIMIT 1';
+		$rt = $app->db->select($this->db_table, array(
+			'where' => array(
+				$this->idAttribute => $app->db->escape($this->getId())
+			),
+			'limit' => '1'
+		));
 
-		$rt = $app->database->query($q);
 
 		if (!$rt || $rt->num_rows == 0) {
 			return false;
@@ -129,11 +131,17 @@ class LapiModel {
 			return false;
 		}
 
-		$q = 'DELETE FROM ' . $this->db_table . ' WHERE ' . $this->idAttribute . '="' . $app->database->escape($this->getId()) . '"';
-		if (isset($attr['where'])) $q .= ' AND ' . $attr['where'];
-		$q .= ' LIMIT 1';
+		$wh = array($this->idAttribute => $this->getId());
+		if (isset($attr['where']) && is_array($attr['where'])) {
+			$wh = array_merge($attr['where'], $wh);
+		} else if (isset($attr['where']) && is_string($attr['where']) && strlen($attr['where']) > 0) {
+			$wh = $attr['where'] . ' AND `' . $app->db->escape($this->idAttribute) . '`="' . $app->db->escape($this->getId()) . '"';
+		}
 
-		$rt = !!@$app->database->query($q);
+		$rt = !!@$app->db->delete($this->db_table, array(
+			'where' => $wh,
+			'limit' => '1'
+		));
 
 		if (!$rt) {
 			throw new Exception('LapiModel Error. Can\'t remove model from MySQL');
@@ -160,9 +168,12 @@ class LapiModel {
 				return false;
 			}
 
-			$q = 'SELECT 1 FROM ' . $this->db_table . ' WHERE ' . $this->idAttribute . '="' . ($app->database->escape($this->getId())) . '" LIMIT 1';
-
-			$rt = $app->database->query($q);
+			$rt = $app->db->select($this->db_table, array(
+				'where' => array(
+					$this->idAttribute => $this->getId()
+				),
+				'limit' => 1
+			));
 			return (!$rt || $rt->num_rows === 0);
 		} 
 		return true;

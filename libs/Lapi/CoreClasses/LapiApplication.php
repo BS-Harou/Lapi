@@ -20,4 +20,13 @@ class LapiApplication {
 		header('Location: ' . $this->getRealRoot() . $section);
 		exit;
 	}
+
+	public function __get($name) {
+		if ($name == 'db') return $this->database;
+	}
+
+	public function __isset($name) {
+		if ($name == 'db') return true;
+		return false;
+	}
 }

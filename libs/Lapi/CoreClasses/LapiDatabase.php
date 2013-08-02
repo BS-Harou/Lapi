@@ -22,6 +22,26 @@ class LapiDatabase {
 		return $this->mysqli->query($q);
 	}
 
+	public function select($table, $attr=array()) {
+
+		$q = 'SELECT SQL_CALC_FOUND_ROWS * FROM `' . $this->escape($table) . '`';
+		if (isset($attr['where'])) $q .= self::parseWhere($attr['where']);
+		if (isset($attr['order'])) $q .= ' ORDER BY ' . $attr['order'];
+		if (isset($attr['limit'])) $q .= ' LIMIT ' . $attr['limit'];
+
+
+		return $this->query($q);
+	}
+
+	public function delete($table, $attr=array()) {
+		$q = 'DELETE FROM `' . $this->escape($table) . '`';
+		if (isset($attr['where'])) $q .= self::parseWhere($attr['where']);
+		if (isset($attr['limit'])) $q .= ' LIMIT ' . $attr['limit'];
+
+		return $this->query($q);
+	}
+
+
 	public function dump() {
 		var_dump($this->mysqli);
 	}
@@ -33,5 +53,22 @@ class LapiDatabase {
 	private function realConnect() {
 		$this->mysqli = new Mysqli($this->host, $this->username, $this->password, $this->database);
 		$this->isConnected = $this->mysqli->connect_errno === 0 ? true : false;
+	}
+
+	static function parseWhere($arr) {
+		if (is_string($arr)) {
+			return ' WHERE ' . $arr;
+		} else if (!is_array($arr) || count($arr) == 0) {
+			return;
+		}
+
+		global $app;
+		$str = ' WHERE ';
+		foreach ($arr as $key => $value)  {
+			$str .= '`' . $app->db->escape($key) . '`="' . $app->db->escape($value) . '" AND ';
+		}
+		$str = preg_replace('/\sAND\s$/', '', $str);
+
+		return $str;
 	}
 }

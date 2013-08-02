@@ -50,7 +50,9 @@ function remove_stash_post($id) {
 	));
 
 	$post->destroy(array(
-		'where' => 'owner="' . $app->user->nick. '"'
+		'where' => array(
+			'owner' => $app->user->nick
+		)
 	));
 }
 

@@ -51,7 +51,10 @@ require_once($app->dirModels . '/Post.php');
 
 $posts = new Posts();
 $posts->fetch(array(
-	'where' => 'club="' . $klub . '" AND owner="' . $app->user->nick . '"'
+	'where' => array(
+		'club' => $klub,
+		'owner' => $app->user->nick
+	)
 ));
 
 
