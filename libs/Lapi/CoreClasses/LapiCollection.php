@@ -23,10 +23,17 @@ class LapiCollection {
 	}
 
 	public function remove($obj) {
-		for ($i=0; $i<count($this->models); $i++) {
-			if ($this->models[$i] === $obj) {
-				unset($this->models[$i]);
-				// move the array!
+		if ($obj instanceof LapiModel) {
+			for ($i=0; $i<count($this->models); $i++) {
+				if ($this->models[$i] === $obj) {
+					array_splice($this->models, $i, 1);
+				}
+			}
+		} else if (is_array($obj)) {
+			for ($i=0; $i<count($this->models); $i++) {
+				if (in_array($this->models[$i], $obj)) {
+					array_splice($this->models, $i, 1);
+				}
 			}
 		}
 	}
