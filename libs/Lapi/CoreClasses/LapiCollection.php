@@ -5,6 +5,15 @@ class LapiCollection {
 	public $models = array();
 	public $db_table;
 
+	public function __construct($attr=NULL) {
+		if (method_exists($this, 'initialize')) {
+			$this->initialize();
+		}
+		if (is_array($attr)) {
+			$this->fetch($attr);
+		}
+	}
+
 	public function add($obj) {
 		// if instance of LapiModel
 		$this->models[] = $obj;
