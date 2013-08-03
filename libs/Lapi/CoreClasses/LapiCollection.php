@@ -146,4 +146,17 @@ class LapiCollection {
 		}
 		return NULL;
 	}
+
+	public function create($attrs, $options=array()) {
+		if (!isset($this->model) || !$this->model || !is_string($this->model) || strlen($this->model) == 0) {
+			return NULL;
+		}
+
+		$model = new $this->model($attrs);
+		$is_saved = $model->save();
+		if (!is_array($options) || !isset($options['wait']) || $options['wait'] != true || $is_saved == true) {
+			$this->add($model);
+		}
+		return $model;
+	}
 }
