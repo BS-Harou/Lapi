@@ -15,7 +15,7 @@ class LapiCollection {
 	}
 
 	public function add($obj) {
-		is_array($obj) {
+		if (is_array($obj)) {
 			for ($i=0; $i<count($obj); $i++) $this->models[] = $obj[$i];
 		} else if ($obj instanceof LapiModel) {
 			$this->models[] = $obj;
@@ -62,6 +62,10 @@ class LapiCollection {
 		return count($this->models);
 	}
 
+	public function parse($arr) {
+		return $arr;
+	}
+
 	public function fetch($attr=array()) {
 		global $app;
 
@@ -75,10 +79,18 @@ class LapiCollection {
 			return false;
 		}
 
-		$this->models = array();
+		$final_data = array();
 
 		while ($data = $rt->fetch_object()) {
-			$this->models[] = new $this->model($data);
+			$final_data[] = $data;
+		}
+
+		$final_data = $this->parse($final_data);
+
+		$this->models = array();
+
+		for ($i=0; $i < count($final_data); $i++) {
+			$this->models[] = new $this->model($final_data[$i]);
 		}
 
 		return true;
@@ -102,8 +114,29 @@ class LapiCollection {
 		return $data->amount;
 	}
 
+	public function pluck($str) {
+		$rt = array();
+		for ($i=0,$j=$this->length(); $i < $j; $i++) {
+			$rt[] = $this->get($str);
+		}
+		return $rt;
+	}
+
+	public function where($attrs) {
+		$rt = array();
+		for ($i=0,$j=$this->length(); $i < $j; $i++) {
+			foreach ($attrs as $key => $value) {
+				if ($this->at($i)->get($key) != $attrs[$key]) {
+					continue 2;
+				}
+			}
+			$rt[] = $this->at($i);
+		}
+		return $rt;
+	}
+
 	public function findWhere($attrs) {
-		for ($i=0; $i < $this->length(); $i++) {
+		for ($i=0,$j=$this->length(); $i < $j; $i++) {
 			foreach ($attrs as $key => $value) {
 				if ($this->at($i)->get($key) != $attrs[$key]) {
 					continue 2;
