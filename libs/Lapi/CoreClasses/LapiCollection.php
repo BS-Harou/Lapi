@@ -15,8 +15,11 @@ class LapiCollection {
 	}
 
 	public function add($obj) {
-		// if instance of LapiModel
-		$this->models[] = $obj;
+		is_array($obj) {
+			for ($i=0; $i<count($obj); $i++) $this->models[] = $obj[$i];
+		} else if ($obj instanceof LapiModel) {
+			$this->models[] = $obj;
+		}
 	}
 
 	public function remove($obj) {
