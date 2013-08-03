@@ -101,8 +101,7 @@ if (isset($_GET['action'])) {
 		$data = get_post(stripString($_GET['club']), stripString($_GET['id']));
 		$post = new Post($data);
 
-		$posts = new Posts();
-		$posts->fetch(array(
+		$posts = new Posts(array(
 			'where' => $post->pick(array('owner', 'club', 'post_id'))
 		));
 
@@ -123,8 +122,7 @@ if (isset($offset) && $offset > 0) {
 	$limit = $offset . ', 15';
 }
 
-$posts = new Posts();
-$posts->fetch(array(
+$posts = new Posts(array(
 	'where' => 'owner="' . stripString($app->user->nick) . '"',
 	'order' => 'id DESC',
 	'limit' => $limit

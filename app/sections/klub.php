@@ -35,9 +35,9 @@ $query = $_SERVER['QUERY_STRING'];
 $klub = stripString($_GET['klub']);
 
 if ($_GET['mod'] === 'book') {
-	callFile('http://www.lapiduch.cz/index.php?'.$query);
+	callFile('http://www.lapiduch.cz/index.php?' . $query);
 }
-$doc = getFile('http://www.lapiduch.cz/klub.php?'.$query);
+$doc = getFile('http://www.lapiduch.cz/klub.php?' . $query);
 
 $xpath = new DOMXpath($doc);
 $elements = $xpath->query('//table[substring(@id,1,4)="post"]');
@@ -49,8 +49,7 @@ if (is_null($elements) || $elements->length == 0) {
 
 require_once($app->dirModels . '/Post.php');
 
-$posts = new Posts();
-$posts->fetch(array(
+$posts = new Posts(array(
 	'where' => array(
 		'club' => $klub,
 		'owner' => $app->user->nick
