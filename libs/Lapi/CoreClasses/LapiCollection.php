@@ -28,9 +28,10 @@ class LapiCollection {
 
 	public function get($id) {
 		for ($i=0; $i<count($this->models); $i++) {
-			if ($this->models[$i]->getId() === $id || $this->models[$i]->cid === $id) {
-				return $this->models[$i];
-			}
+			if ($this->models[$i]->getId() === $id) return $this->models[$i];
+		}
+		for ($i=0; $i<count($this->models); $i++) {
+			if ($this->models[$i]->cid === $id) return $this->models[$i];
 		}
 	}
 
