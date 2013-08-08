@@ -52,7 +52,7 @@ if ($kdo && $body) {
  * Render form
  */
 
-if (isset($kdo) || $kdo) {
+if (isset($kdo) && strlen($kdo) > 0) {
 	$params->send_to = $kdo;
 } else if (isset($_GET['to'])) {
 	$params->send_to = stripString($_GET['to']);
