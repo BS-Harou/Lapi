@@ -23,7 +23,7 @@
 	</select>
 
 	<label for="new_post_color">Barva pozadí nových příspěvků: </label>
-		<input type="color" id="new_post_color" name="new_post_color" value="{{SETTINGS_NEW_POST_COLOR}}{{^SETTINGS_NEW_POST_COLOR}}#f0f0fe{{/SETTINGS_NEW_POST_COLOR}}" /> 
+		<input type="color" id="new_post_color" name="new_post_color" value="{{SETTINGS_NEW_POST_COLOR}}{{^SETTINGS_NEW_POST_COLOR}}#f0f0fe{{/SETTINGS_NEW_POST_COLOR}}" />
 
 	<label>
 		<input type="checkbox" value="true" name="show_spoilers" {{#SETTINGS_SHOW_SPOILERS}}checked{{/SETTINGS_SHOW_SPOILERS}} /> Automaticky zobrazovat spoilery
@@ -43,6 +43,10 @@
 
 	<label>
 		<input type="checkbox" value="true" name="linkify" {{#SETTINGS_LINKIFY}}checked{{/SETTINGS_LINKIFY}} /> Převádět text na odkazy
+	</label>
+
+	<label>
+		<input type="checkbox" value="true" name="slideout" {{#SETTINGS_SLIDEOUT}}checked{{/SETTINGS_SLIDEOUT}} /> Boční výsuvné menu
 	</label>
 
 

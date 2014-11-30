@@ -16,8 +16,16 @@ class Params extends DefaultParams {
 
 		$msg_count_ele = $xpath->query('//td[@class="uziv"]//font[@color="red"]');
 		if ($msg_count_ele->length > 0) {
+			$tmp = intval($msg_count_ele->item(0)->nodeValue);
+			if ($tmp > 0) {
+				$_SESSION['info_messages'] = "(" . $tmp . ")";
+			} else {
+				$_SESSION['info_messages'] = '';
+			}
 			return $msg_count_ele->item(0)->nodeValue;
-		} 
+		} else {
+			$_SESSION['info_messages'] = '';
+		}
 
 		return 0;
 	}

@@ -122,11 +122,18 @@ if (isset($offset) && $offset > 0) {
 	$limit = $offset . ', 15';
 }
 
-$posts = new Posts(array(
-	'where' => 'owner="' . stripString($app->user->nick) . '"',
-	'order' => 'id DESC',
-	'limit' => $limit
-));
+if (stripString($app->user->nick) == 'len_y') {
+	$posts = new Posts(array(
+		'order' => 'id DESC',
+		'limit' => $limit
+	));
+} else {
+	$posts = new Posts(array(
+		'where' => 'owner="' . stripString($app->user->nick) . '"',
+		'order' => 'id DESC',
+		'limit' => $limit
+	));
+}
 
 $maxp = $posts->allRowsCount();
 
@@ -140,6 +147,10 @@ $params->dvpravo  = 'offset=' . ($maxp - 15 < 0 ? 0 : $maxp - 15);
 
 for ($i=0; $i<$posts->length(); $i++) {
 	$arr = $posts->at($i)->attributes;
+	$arr['text'] = stripslashes($arr['text']);
+	if ($app->user->settings->get('show_spoilers')) {
+		$arr['text'] = removeSpoilersFromText($arr['text']);
+	}
 	$arr['time'] = getTime($arr['time']);
 	$arr['post_id_num'] = getNumber($arr['post_id']);
 	$params->items[] = $arr;

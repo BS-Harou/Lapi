@@ -15,6 +15,18 @@ class DefaultParams {
 		return isset($_SESSION['lapi_lopuch']);
 	}
 
+	public function INFO_USERNAME() {
+		return $_SESSION['info_username'];
+	}
+
+	public function INFO_AVATAR() {
+		return $_SESSION['info_avatar'];
+	}
+
+	public function INFO_MESSAGES() {
+		return $_SESSION['info_messages'];
+	}
+
 	public function BASE_URL() {
 		global $app;
 		return 'http://' . $_SERVER['SERVER_NAME'] . $app->getRealRoot();

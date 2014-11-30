@@ -53,6 +53,22 @@ function removeSpoilers($node) {
 	}
 }
 
+function removeSpoilersFromText($html) {
+	/*$node = new DOMDocument('1.0', 'UTF-8');
+	//$html = iconv('utf-8', 'windows-1250', $html);
+	$node->loadHTML($html);
+
+	$elements = $node->getElementsByTagName('font');
+	foreach ($elements as $element) { 
+		$element->setAttribute('color', 'black');
+	}
+
+	$rt = $node->saveHTML();
+	//$rt = iconv('windows-1250', 'utf-8', $rt);
+	return $rt;*/
+	return $html;
+}
+
 function hideImages($node) {
 	$elements = $node->getElementsByTagName('img');
 	foreach ($elements as $element) { 

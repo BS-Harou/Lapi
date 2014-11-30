@@ -4,14 +4,19 @@
 	<meta charset="utf-8" />
 	<base href="{{BASE_URL}}" />
 	<meta name="keywords" content="diskuse, diskuze, diskusní  server, diskuzní server, mobil" />
-	
+	{{#SETTINGS_SLIDEOUT}}
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" />
+	{{/SETTINGS_SLIDEOUT}}
+
 	<meta name="viewport" content="width=device-width, min-width=320, initial-scale=1, maximum-scale={{#IS_LOGGED}}5{{/IS_LOGGED}}{{^IS_LOGGED}}1{{/IS_LOGGED}}" />
-	
-	
+
+
 	<link rel="shortcut icon" href="http://www.lapiduch.cz/favicon.ico" type="image/x-icon" />
-	<link rel="stylesheet" href="{{DIR_STATIC}}/styles/main.css" type="text/css" />
-	
-	<title>Lapiduch</title>   
+	<link rel="stylesheet" href="{{DIR_STATIC}}/styles/main.css?v=201411092" type="text/css" />
+
+
+
+	<title>Lapiduch</title>
 </head>
 <body>
 
@@ -25,14 +30,74 @@
 	<section>
 		{{BODY}}
 	</section>
-	
+
 
 	<footer>
 		&#169; Lapiduch.cz &amp; Len_y{{#IS_LOGGED}} &nbsp;&nbsp;&nbsp;&nbsp; <a href="./odhlasit">Odhlásit se</a>{{/IS_LOGGED}}
 	</footer>
-	
-	
-<script src="{{DIR_STATIC}}/scripts/script.js?v=123.8"></script>
+
+	{{#SETTINGS_SLIDEOUT}}
+	<section id="sidebar" class="slide">
+		<a href="./menu" id="sidebar-user">
+		<img src="http://www.lapiduch.cz/{{INFO_AVATAR}}" />
+		<div class="sidebar-username">
+			{{INFO_USERNAME}}
+		</div>
+		</a>
+		<ul>
+			<li>
+				<a href="./nove">
+					<span class="glyphicon glyphicon-home"></span>
+					<span class="sidebar-item">Nové</span>
+				</a>
+			</li>
+			<li>
+				<a href="./oblibene">
+					<span class="glyphicon glyphicon-heart"></span>
+					<span class="sidebar-item">Oblíbené</span>
+				</a>
+			</li>
+			<li>
+				<a href="./posta">
+					<span class="glyphicon glyphicon-envelope"></span>
+					<span class="sidebar-item">Pošta{{INFO_MESSAGES}}</span>
+				</a>
+			</li>
+			<li>
+				<a href="./kluby">
+					<span class="glyphicon glyphicon-comment"></span>
+					<span class="sidebar-item">Kluby</span>
+				</a>
+			</li>
+			<li>
+				<a href="./zebricky">
+					<span class="glyphicon glyphicon-stats"></span>
+					<span class="sidebar-item">Žebříčky</span>
+				</a>
+			</li>
+			<li>
+				<a href="./nastaveni">
+					<span class="glyphicon glyphicon-cog"></span>
+					<span class="sidebar-item">Nastavení</span>
+				</a>
+			</li>
+			<li>
+				<a href="./uschovna">
+					<span class="glyphicon glyphicon-star"></span>
+					<span class="sidebar-item">Úschovna</span>
+				</a>
+			</li>
+			<li>
+				<a href="./odhlasit">
+					<span class="glyphicon glyphicon-off"></span>
+					<span class="sidebar-item">Odhlasit se</span>
+				</a>
+			</li>
+		</ul>
+	</section>
+	{{/SETTINGS_SLIDEOUT}}
+
+<script src="{{DIR_STATIC}}/scripts/script.js?v=123.9"></script>
 
 {{#club_name}}
 <script>

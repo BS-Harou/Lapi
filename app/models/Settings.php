@@ -14,7 +14,8 @@ class Settings extends LapiModel {
 		'old_style' => false,
 		'hide_old_images' => false,
 		'new_post_color' => false, //'#f0f0fe'; (when false, the default CSS is used)
-		'linkify' => false	
+		'linkify' => false,
+		'slideout' => false
 	);
 
 	public function validate() {
