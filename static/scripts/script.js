@@ -150,7 +150,10 @@ function addValue(form, name, value) {
 		}
 	};
 
-
+	if (navigator.userAgent.indexOf('Presto') == -1) {
+		sidebar.el.style.display = 'block';
+	}
+	
 
 	d.addEventListener("touchstart", handleStart, false);
 
@@ -161,14 +164,15 @@ function addValue(form, name, value) {
 	var dragDiff = 0;
 	var lastXd = 0;
 	var lastYd = 0;
+	var moving = false;
 	function handleStart(e) {
 		var t = e.changedTouches[0];
 		var ifClosed = t.pageX < 20 && !sidebar.opened;
 		var ifOpened = sidebar.opened;
 		if (ifClosed || ifOpened) {
 			dragDiff = ifClosed ? 0 : sidebar.width - t.pageX;
-			lastXd = 0;
-			lastYd = 0;
+			lastXd = t.pageX;
+			lastYd = t.pageY;
 			sidebar.el.classList.remove('slide');
 			d.addEventListener("touchmove", handleMove, false);
 			d.addEventListener("touchend", handleEnd, false);
@@ -176,6 +180,7 @@ function addValue(form, name, value) {
 	}
 
 	function handleEnd(e) {
+		moving = false;
 		var t = e.changedTouches[0];
 		sidebar.el.classList.add('slide');
 		sidebar.opened = sidebar.x > -sidebar.width / 2;
@@ -192,10 +197,21 @@ function addValue(form, name, value) {
 
 	function handleMove(e) {
 		var t = e.changedTouches[0];
+
+		var diffX = Math.abs(t.pageX - lastXd);
+		var diffY = Math.abs(t.pageY - lastYd);
+		if (moving == false) {
+			if (diffX > diffY) {
+				moving = true;
+			} else {
+				handleEnd(e);
+				return;
+			}
+		}
+
 		sidebar.x = t.pageX - sidebar.width + dragDiff;
 		lastXd = t.pageX;
 		lastYd = t.pageY;
 	}
-
 
 })();

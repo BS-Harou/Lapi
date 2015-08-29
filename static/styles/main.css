@@ -489,6 +489,7 @@ h2 {
  * Slide-out menu
  */
 #sidebar {
+	display: none;
 	-webkit-user-select: none;
 	width: 20rem;
 	background: rgba(30, 30, 30, 0.92);
