@@ -6,6 +6,9 @@
 function login($user, $pass) {
 	global $app;
 
+	$user = trim($user);
+	$pass = trim($pass);
+
 	$postdata = http_build_query(array('user' => $user, 'pass' => $pass));
 
 
@@ -21,7 +24,7 @@ function login($user, $pass) {
 
 	$tmp1 = explode('=', $my_headers[4]);
 
-	if (count($tmp1) == 2 && trim($tmp1[1]) != 'book') {
+	if (count($tmp1) == 2 && trim($tmp1[1]) != 'book' && strlen(trim($tmp1[1])) > 0) {
 		$_SESSION['lapi_lopuch'] = trim($tmp1[1]);
 		$tmp2 = explode('=', $my_headers[5]);
 		$_SESSION['lapi_user'] = trim($tmp2[1]);

@@ -12,7 +12,7 @@ class DefaultParams {
 	}
 
 	public function IS_LOGGED() {
-		return isset($_SESSION['lapi_lopuch']);
+		return isset($_SESSION['lapi_lopuch']) && strlen($_SESSION['lapi_lopuch']) > 0;
 	}
 
 	public function INFO_USERNAME() {
